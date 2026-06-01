@@ -2,7 +2,7 @@
 Write-Host "=== Claude Code + Volcengine ModelArk (ark-) Setup ===" -ForegroundColor Cyan
 
 # Prompt for your ARK API Key
-$apiKey = Read-Host -Prompt "ark-c22e22d8-a47a-4b2f-82c1-3c6582a391d3-f16a2"
+$apiKey = Read-Host -Prompt "ark-c22e22d8-a47a-a2"
 
 # Simple validation
 if (-not $apiKey.StartsWith("ark-")) {
