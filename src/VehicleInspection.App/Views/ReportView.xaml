@@ -1,0 +1,109 @@
+<UserControl x:Class="VehicleInspection.App.Views.ReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:VehicleInspection.App.Controls">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1.1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border Style="{StaticResource PanelBorder}" Margin="0,0,0,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="180" />
+                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                    <TextBlock Text="{DynamicResource DateFrom}" Style="{StaticResource EyebrowText}" />
+                    <DatePicker SelectedDate="{Binding FromDate}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                    <TextBlock Text="{DynamicResource DateTo}" Style="{StaticResource EyebrowText}" />
+                    <DatePicker SelectedDate="{Binding ToDate}" />
+                </StackPanel>
+                <StackPanel Grid.Column="2" Margin="0,0,12,0">
+                    <TextBlock Text="{DynamicResource LicensePlate}" Style="{StaticResource EyebrowText}" />
+                    <TextBox Text="{Binding LicensePlate, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Grid.Column="3" Margin="0,0,12,0">
+                    <TextBlock Text="{DynamicResource Status}" Style="{StaticResource EyebrowText}" />
+                    <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding SelectedStatus}" />
+                </StackPanel>
+                <CheckBox Grid.Column="4" Content="{DynamicResource FodOnly}" IsChecked="{Binding FodAlertsOnly}" VerticalAlignment="Bottom" Margin="0,0,12,8" Foreground="{StaticResource UvssTextBrush}" />
+                <Button Grid.Column="5" Content="{DynamicResource ApplyFilters}" Command="{Binding ApplyFiltersCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Margin="0,0,10,0" />
+                <Button Grid.Column="6" Content="{DynamicResource ExportCsv}" Command="{Binding ExportCsvCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Margin="0,0,10,0" />
+                <Button Grid.Column="7" Content="{DynamicResource ExportPdf}" Command="{Binding ExportPdfCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" />
+            </Grid>
+        </Border>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False" AlternationCount="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Scan Time" Binding="{Binding ScanTime}" Width="190" />
+                <DataGridTextColumn Header="Plate" Binding="{Binding LicensePlate}" Width="120" />
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110" />
+                <DataGridTextColumn Header="Lane" Binding="{Binding Lane}" Width="180" />
+                <DataGridTextColumn Header="Operator" Binding="{Binding OperatorName}" Width="150" />
+                <DataGridTextColumn Header="FOD" Binding="{Binding FodAlerts.Count}" Width="80" />
+                <DataGridTextColumn Header="System" Binding="{Binding SystemHealth}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Row="2" Style="{StaticResource PanelBorder}" Margin="0,14,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <DockPanel Margin="0,0,0,12">
+                    <TextBlock Text="SELECTED RECORD DEVICE IMAGES" Style="{StaticResource EyebrowText}" DockPanel.Dock="Left" />
+                    <TextBlock Text="{Binding SelectedRecord.TriggerId, StringFormat=Trigger: {0}}" Style="{StaticResource MutedText}" DockPanel.Dock="Right" />
+                </DockPanel>
+                <UniformGrid Grid.Row="1" Columns="3">
+                    <Border Background="#101820" BorderBrush="#335C84" BorderThickness="1" Margin="0,0,10,0" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="UVSS UNDER VEHICLE" Style="{StaticResource EyebrowText}" />
+                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="Selected record UVSS image" ImagePath="{Binding SelectedRecord.UnderVehicleImagePath}" />
+                        </Grid>
+                    </Border>
+                    <Border Background="#101820" BorderBrush="#335C84" BorderThickness="1" Margin="0,0,10,0" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="VLPR PLATE IMAGE" Style="{StaticResource EyebrowText}" />
+                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="Selected record VLPR image" ImagePath="{Binding SelectedRecord.LicensePlateImagePath}" />
+                        </Grid>
+                    </Border>
+                    <Border Background="#101820" BorderBrush="#335C84" BorderThickness="1" Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="X-RAY IMAGE" Style="{StaticResource EyebrowText}" />
+                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="Selected record X-ray image" ImagePath="{Binding SelectedRecord.XrayImagePath}" />
+                        </Grid>
+                    </Border>
+                </UniformGrid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" Style="{StaticResource PanelBorder}" Margin="0,14,0,0" Padding="12">
+            <TextBlock Text="{Binding SecurityMessage}" Style="{StaticResource MutedText}" />
+        </Border>
+    </Grid>
+</UserControl>

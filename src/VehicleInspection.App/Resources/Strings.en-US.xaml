@@ -1,0 +1,29 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">UVSS Vehicle Inspection Command</sys:String>
+    <sys:String x:Key="Dashboard">Dashboard</sys:String>
+    <sys:String x:Key="Reports">Reports</sys:String>
+    <sys:String x:Key="ScanTime">Scan Time</sys:String>
+    <sys:String x:Key="InspectionStatus">Inspection Status</sys:String>
+    <sys:String x:Key="Language">中文</sys:String>
+    <sys:String x:Key="User">User</sys:String>
+    <sys:String x:Key="Role">Role</sys:String>
+    <sys:String x:Key="Lock">Lock</sys:String>
+    <sys:String x:Key="UnderVehicleImage">Undervehicle Image</sys:String>
+    <sys:String x:Key="FullVehicleImage">Full Vehicle Image</sys:String>
+    <sys:String x:Key="LicensePlateImage">License Plate OCR</sys:String>
+    <sys:String x:Key="XrayFod">X-ray / FOD Analysis</sys:String>
+    <sys:String x:Key="InspectionSummary">Inspection Summary</sys:String>
+    <sys:String x:Key="SystemStatus">System Status</sys:String>
+    <sys:String x:Key="OperatorNotes">Operator Notes</sys:String>
+    <sys:String x:Key="FilterReports">Filter Reports</sys:String>
+    <sys:String x:Key="DateFrom">From</sys:String>
+    <sys:String x:Key="DateTo">To</sys:String>
+    <sys:String x:Key="LicensePlate">License Plate</sys:String>
+    <sys:String x:Key="Status">Status</sys:String>
+    <sys:String x:Key="FodOnly">FOD alerts only</sys:String>
+    <sys:String x:Key="ApplyFilters">Apply Filters</sys:String>
+    <sys:String x:Key="ExportCsv">Export CSV</sys:String>
+    <sys:String x:Key="ExportPdf">Export PDF</sys:String>
+</ResourceDictionary>

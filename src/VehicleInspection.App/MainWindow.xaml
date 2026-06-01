@@ -1,0 +1,70 @@
+<Window x:Class="VehicleInspection.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:VehicleInspection.App.Views"
+        Title="{DynamicResource AppTitle}"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        WindowState="Maximized"
+        Topmost="False">
+    <Grid Background="{StaticResource UvssDeepBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="76" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{StaticResource UvssNavyBrush}" BorderBrush="#24384B" BorderThickness="0,0,0,1">
+            <Grid Margin="18,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="48" Height="48" Background="{StaticResource UvssBlueBrush}" BorderBrush="{StaticResource UvssBlueBrightBrush}" BorderThickness="1">
+                        <TextBlock Text="UV" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Black" FontSize="18" />
+                    </Border>
+                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="TeleRadio" FontWeight="Bold" FontSize="18" />
+                        <TextBlock Text="Vehicle Screening Systems" Style="{StaticResource MutedText}" FontSize="12" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <Button Content="{DynamicResource Dashboard}" Command="{Binding ShowDashboardCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" />
+                    <Button Content="{DynamicResource Reports}" Command="{Binding ShowReportsCommand}" Style="{StaticResource PrimaryButton}" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="0,0,18,0">
+                        <TextBlock Text="{DynamicResource ScanTime}" Style="{StaticResource EyebrowText}" />
+                        <TextBlock Text="{Binding Dashboard.CurrentInspection.ScanTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,0">
+                        <TextBlock Text="{DynamicResource InspectionStatus}" Style="{StaticResource EyebrowText}" />
+                        <TextBlock Text="{Binding Dashboard.CurrentInspection.Status}" Foreground="{Binding Dashboard.InspectionStatusBrush}" FontWeight="Bold" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,0">
+                        <TextBlock Text="{DynamicResource User}" Style="{StaticResource EyebrowText}" />
+                        <TextBlock Text="{Binding UserName}" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,0" MaxWidth="230">
+                        <TextBlock Text="SOCKET API" Style="{StaticResource EyebrowText}" />
+                        <TextBlock Text="{Binding SocketStatus}" Foreground="{StaticResource UvssBlueBrightBrush}" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <StackPanel Margin="0,0,18,0">
+                        <TextBlock Text="{DynamicResource Role}" Style="{StaticResource EyebrowText}" />
+                        <TextBlock Text="{Binding RoleName}" />
+                    </StackPanel>
+                    <Button Content="{DynamicResource Language}" Command="{Binding ToggleLanguageCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" />
+                    <Button Content="{DynamicResource Lock}" Command="{Binding LockCommand}" Style="{StaticResource PrimaryButton}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <views:DashboardView DataContext="{Binding Dashboard}" Visibility="Visible" x:Name="DashboardContent" />
+            <views:ReportView DataContext="{Binding Reports}" Visibility="Collapsed" x:Name="ReportContent" />
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,262 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="UvssNavyColor">#FF1A242F</Color>
+    <Color x:Key="UvssDeepColor">#FF101820</Color>
+    <Color x:Key="UvssPanelColor">#FF162230</Color>
+    <Color x:Key="UvssPanelAltColor">#FF203041</Color>
+    <Color x:Key="UvssBlueColor">#FF1F6FBF</Color>
+    <Color x:Key="UvssBlueBrightColor">#FF4EA3E6</Color>
+    <Color x:Key="UvssTextColor">#FFEAF2FA</Color>
+    <Color x:Key="UvssMutedTextColor">#FF9EACBA</Color>
+    <Color x:Key="UvssDangerColor">#FFE35D5B</Color>
+    <Color x:Key="UvssWarningColor">#FFE7B84D</Color>
+    <Color x:Key="UvssSuccessColor">#FF53C18A</Color>
+
+    <SolidColorBrush x:Key="UvssNavyBrush" Color="{StaticResource UvssNavyColor}" />
+    <SolidColorBrush x:Key="UvssDeepBrush" Color="{StaticResource UvssDeepColor}" />
+    <SolidColorBrush x:Key="UvssPanelBrush" Color="{StaticResource UvssPanelColor}" />
+    <SolidColorBrush x:Key="UvssPanelAltBrush" Color="{StaticResource UvssPanelAltColor}" />
+    <SolidColorBrush x:Key="UvssBlueBrush" Color="{StaticResource UvssBlueColor}" />
+    <SolidColorBrush x:Key="UvssBlueBrightBrush" Color="{StaticResource UvssBlueBrightColor}" />
+    <SolidColorBrush x:Key="UvssTextBrush" Color="{StaticResource UvssTextColor}" />
+    <SolidColorBrush x:Key="UvssMutedTextBrush" Color="{StaticResource UvssMutedTextColor}" />
+    <SolidColorBrush x:Key="UvssDangerBrush" Color="{StaticResource UvssDangerColor}" />
+    <SolidColorBrush x:Key="UvssWarningBrush" Color="{StaticResource UvssWarningColor}" />
+    <SolidColorBrush x:Key="UvssSuccessBrush" Color="{StaticResource UvssSuccessColor}" />
+
+    <Style TargetType="Window">
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="Background" Value="{StaticResource UvssDeepBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+    </Style>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style x:Key="MutedText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource UvssMutedTextBrush}" />
+    </Style>
+
+    <Style x:Key="EyebrowText" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource UvssBlueBrightBrush}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+    </Style>
+
+    <Style x:Key="PanelBorder" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource UvssPanelBrush}" />
+        <Setter Property="BorderBrush" Value="#33465A" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <Style TargetType="Button">
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Padding" Value="14,7" />
+        <Setter Property="Foreground" Value="#FFFFFFFF" />
+        <Setter Property="Background" Value="#FF165A9F" />
+        <Setter Property="BorderBrush" Value="#FF73C5FF" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="ButtonChrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ButtonChrome" Property="Background" Value="#FF2182D8" />
+                            <Setter TargetName="ButtonChrome" Property="BorderBrush" Value="#FFFFFFFF" />
+                            <Setter Property="Foreground" Value="#FFFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="ButtonChrome" Property="Background" Value="#FF0B3C6E" />
+                            <Setter TargetName="ButtonChrome" Property="BorderBrush" Value="#FF4EA3E6" />
+                            <Setter Property="Foreground" Value="#FFFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="ButtonChrome" Property="Background" Value="#FF263241" />
+                            <Setter TargetName="ButtonChrome" Property="BorderBrush" Value="#FF516173" />
+                            <Setter Property="Foreground" Value="#FFB8C4D0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="MinHeight" Value="38" />
+        <Setter Property="Padding" Value="16,8" />
+    </Style>
+
+    <Style TargetType="TextBox">
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="Background" Value="#0F1720" />
+        <Setter Property="BorderBrush" Value="#34485C" />
+        <Setter Property="CaretBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+    </Style>
+
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Foreground" Value="#FFFFFFFF" />
+        <Setter Property="Background" Value="#FF101820" />
+        <Setter Property="Padding" Value="10,7" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border x:Name="ItemChrome" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="ItemChrome" Property="Background" Value="#FF1F6FBF" />
+                            <Setter Property="Foreground" Value="#FFFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ItemChrome" Property="Background" Value="#FF0B3C6E" />
+                            <Setter Property="Foreground" Value="#FFFFFFFF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ComboBox">
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Foreground" Value="#FFFFFFFF" />
+        <Setter Property="Background" Value="#FF0F1720" />
+        <Setter Property="BorderBrush" Value="#FF73C5FF" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <ToggleButton x:Name="ToggleButton"
+                                      Focusable="False"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                      ClickMode="Press"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="{TemplateBinding BorderBrush}"
+                                      BorderThickness="{TemplateBinding BorderThickness}"
+                                      Foreground="{TemplateBinding Foreground}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="32" />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Margin="10,0,4,0"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  TextElement.Foreground="{TemplateBinding Foreground}" />
+                                <TextBlock Grid.Column="1" Text="▼" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFFFFFFF" FontSize="11" />
+                            </Grid>
+                        </ToggleButton>
+                        <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
+                            <Border Background="#FF101820" BorderBrush="#FF73C5FF" BorderThickness="1" MinWidth="{TemplateBinding ActualWidth}">
+                                <ScrollViewer MaxHeight="260">
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ToggleButton" Property="Background" Value="#FF162230" />
+                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="#FFFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#FFB8C4D0" />
+                            <Setter Property="Background" Value="#FF263241" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="DataGridColumnHeader">
+        <Setter Property="Foreground" Value="#FFFFFFFF" />
+        <Setter Property="Background" Value="#FF0B3C6E" />
+        <Setter Property="BorderBrush" Value="#FF73C5FF" />
+        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Padding" Value="10,8" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridColumnHeader">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="DataGridCell">
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="#2E4054" />
+        <Setter Property="Padding" Value="8,6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0,0,0,1"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="DataGridRow">
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="#FF1F6FBF" />
+                <Setter Property="Foreground" Value="#FFFFFFFF" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="DataGrid">
+        <Setter Property="Background" Value="{StaticResource UvssPanelBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="RowBackground" Value="#13202D" />
+        <Setter Property="AlternatingRowBackground" Value="#182838" />
+        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+        <Setter Property="HorizontalGridLinesBrush" Value="#2E4054" />
+        <Setter Property="VerticalGridLinesBrush" Value="#2E4054" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="ColumnHeaderHeight" Value="40" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="IsReadOnly" Value="True" />
+    </Style>
+</ResourceDictionary>
