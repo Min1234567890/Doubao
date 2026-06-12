@@ -1,5 +1,6 @@
 using System.Net;
 using System.Windows;
+using VehicleInspection.App.Controls;
 using VehicleInspection.App.Localization;
 using VehicleInspection.App.Services;
 using VehicleInspection.Application.Models;
@@ -131,13 +132,10 @@ public sealed class MainViewModel : ViewModelBase
 
     private void Exit()
     {
-        var result = MessageBox.Show(
-            Loc.Get("ExitConfirm"),
-            Loc.Get("Exit"),
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Question);
-
-        if (result == MessageBoxResult.Yes)
+        if (DarkDialog.Show(
+                System.Windows.Application.Current.MainWindow,
+                Loc.Get("Exit"),
+                Loc.Get("ExitConfirm")))
         {
             System.Windows.Application.Current.Shutdown();
         }

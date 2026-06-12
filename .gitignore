@@ -16,3 +16,7 @@ obj/
 *.tmp
 *.user
 *.suo
+
+# Sensitive image data
+transaction/
+datecontrol.jpg

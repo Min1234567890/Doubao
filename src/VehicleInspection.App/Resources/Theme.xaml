@@ -54,6 +54,7 @@
         <Setter Property="Background" Value="{StaticResource UvssPanelBrush}" />
         <Setter Property="BorderBrush" Value="#33465A" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Padding" Value="16" />
     </Style>
 
@@ -73,6 +74,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
@@ -80,6 +82,10 @@
                                           TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="ButtonChrome" Property="BorderBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+                            <Setter TargetName="ButtonChrome" Property="BorderThickness" Value="2" />
+                        </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="ButtonChrome" Property="Background" Value="#FF2182D8" />
                             <Setter TargetName="ButtonChrome" Property="BorderBrush" Value="#FFFFFFFF" />
@@ -91,7 +97,7 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="ButtonChrome" Property="Background" Value="#FF263241" />
                             <Setter TargetName="ButtonChrome" Property="BorderBrush" Value="#FF516173" />
-                            <Setter Property="Foreground" Value="#FFB8C4D0" />
+                            <Setter TargetName="ButtonChrome" Property="TextElement.Foreground" Value="#FFB8C4D0" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -102,15 +108,6 @@
     <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="MinHeight" Value="38" />
         <Setter Property="Padding" Value="16,8" />
-    </Style>
-
-    <Style TargetType="TextBox">
-        <Setter Property="MinHeight" Value="34" />
-        <Setter Property="Padding" Value="10,6" />
-        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
-        <Setter Property="Background" Value="#0F1720" />
-        <Setter Property="BorderBrush" Value="#34485C" />
-        <Setter Property="CaretBrush" Value="{StaticResource UvssBlueBrightBrush}" />
     </Style>
 
     <Style TargetType="ComboBoxItem">
@@ -172,7 +169,7 @@
                             </Grid>
                         </ToggleButton>
                         <Popup x:Name="Popup" IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom" AllowsTransparency="True" Focusable="False" PopupAnimation="Fade">
-                            <Border Background="#FF101820" BorderBrush="#FF73C5FF" BorderThickness="1" MinWidth="{TemplateBinding ActualWidth}">
+                            <Border Background="#FF101820" BorderBrush="#FF73C5FF" BorderThickness="1" CornerRadius="6" MinWidth="{TemplateBinding ActualWidth}">
                                 <ScrollViewer MaxHeight="260">
                                     <ItemsPresenter />
                                 </ScrollViewer>
@@ -185,8 +182,9 @@
                             <Setter TargetName="ToggleButton" Property="BorderBrush" Value="#FFFFFFFF" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Foreground" Value="#FFB8C4D0" />
-                            <Setter Property="Background" Value="#FF263241" />
+                            <Setter TargetName="ToggleButton" Property="Background" Value="#FF263241" />
+                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="#FF516173" />
+                            <Setter TargetName="ToggleButton" Property="TextElement.Foreground" Value="#FFB8C4D0" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -208,6 +206,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6,6,0,0"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="Center"
@@ -226,13 +225,23 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="DataGridCell">
-                    <Border Background="{TemplateBinding Background}"
+                    <Border x:Name="CellBorder"
+                            Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="0,0,0,1"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter VerticalAlignment="Center"
                                           TextElement.Foreground="{TemplateBinding Foreground}" />
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CellBorder" Property="Background" Value="#1E3348" />
+                            <Setter TargetName="CellBorder" Property="BorderBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="CellBorder" Property="Background" Value="#1F6FBF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -240,71 +249,16 @@
 
     <Style TargetType="DataGridRow">
         <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="Background" Value="Transparent" />
         <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#1E3348" />
+            </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#FF1F6FBF" />
+                <Setter Property="Background" Value="#FF0D4B83" />
                 <Setter Property="Foreground" Value="#FFFFFFFF" />
             </Trigger>
         </Style.Triggers>
-    </Style>
-
-    <Style TargetType="DatePicker">
-        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
-        <Setter Property="Background" Value="#0F1720" />
-        <Setter Property="BorderBrush" Value="#34485C" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="MinHeight" Value="28" />
-        <Setter Property="CalendarStyle">
-            <Setter.Value>
-                <Style TargetType="Calendar">
-                    <Setter Property="Background" Value="#162230" />
-                    <Setter Property="Foreground" Value="#FFFFFF" />
-                    <Setter Property="BorderBrush" Value="#335C84" />
-                    <Setter Property="CalendarDayButtonStyle">
-                        <Setter.Value>
-                            <Style TargetType="CalendarDayButton">
-                                <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter Property="Background" Value="Transparent" />
-                            </Style>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="CalendarButtonStyle">
-                        <Setter.Value>
-                            <Style TargetType="CalendarButton">
-                                <Setter Property="Foreground" Value="#FFFFFF" />
-                                <Setter Property="Background" Value="Transparent" />
-                            </Style>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="DatePickerTextBox">
-        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="CaretBrush" Value="{StaticResource UvssBlueBrightBrush}" />
-        <Setter Property="BorderThickness" Value="0" />
-    </Style>
-
-    <Style TargetType="CalendarItem">
-        <Setter Property="Background" Value="#162230" />
-        <Setter Property="BorderBrush" Value="#335C84" />
-        <Setter Property="Foreground" Value="#FFFFFF" />
-        <Setter Property="TextElement.Foreground" Value="#FFFFFF" />
-    </Style>
-
-    <Style TargetType="CalendarDayButton">
-        <Setter Property="Foreground" Value="#FFFFFF" />
-        <Setter Property="Background" Value="Transparent" />
-    </Style>
-
-    <Style TargetType="CalendarButton">
-        <Setter Property="Foreground" Value="#FFFFFF" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
     <Style TargetType="DataGrid">
@@ -319,5 +273,298 @@
         <Setter Property="ColumnHeaderHeight" Value="40" />
         <Setter Property="CanUserAddRows" Value="False" />
         <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <!-- ═══ TOGGLE BUTTON (ComboBox dropdown) ═══ -->
+    <Style TargetType="ToggleButton">
+        <Setter Property="Background" Value="#0F1720" />
+        <Setter Property="BorderBrush" Value="#73C5FF" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Chrome"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Chrome" Property="Background" Value="#162230" />
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="#FFFFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Chrome" Property="Background" Value="#1F6FBF" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Chrome" Property="Background" Value="#263241" />
+                            <Setter TargetName="Chrome" Property="BorderBrush" Value="#516173" />
+                            <Setter TargetName="Chrome" Property="TextElement.Foreground" Value="#B8C4D0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══ CHECKBOX ═══ -->
+    <Style TargetType="CheckBox">
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="Background" Value="#0F1720" />
+        <Setter Property="BorderBrush" Value="#34485C" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="6,0,0,0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="CheckMarkBox"
+                                Width="18" Height="18"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Margin="0,0,6,0">
+                            <Path x:Name="CheckMarkPath"
+                                  Data="M 3,8 L 7,12 L 15,4"
+                                  Stroke="{StaticResource UvssBlueBrightBrush}"
+                                  StrokeThickness="2.5"
+                                  StrokeStartLineCap="Round"
+                                  StrokeEndLineCap="Round"
+                                  StrokeLineJoin="Round"
+                                  Visibility="Collapsed"
+                                  Stretch="Uniform" />
+                        </Border>
+                        <ContentPresenter Grid.Column="1"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"
+                                          TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckMarkPath" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="CheckMarkBox" Property="Background" Value="#1F6FBF" />
+                            <Setter TargetName="CheckMarkBox" Property="BorderBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="CheckMarkBox" Property="BorderBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+                            <Setter TargetName="CheckMarkBox" Property="Background" Value="#162230" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="CheckMarkBox" Property="Background" Value="#0B3C6E" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="CheckMarkBox" Property="Background" Value="#263241" />
+                            <Setter TargetName="CheckMarkBox" Property="BorderBrush" Value="#516173" />
+                            <Setter TargetName="CheckMarkPath" Property="Stroke" Value="#516173" />
+                            <Setter Property="Foreground" Value="#9EACBA" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══ SCROLLBAR ═══ -->
+    <Style TargetType="ScrollBar">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid>
+                        <Border Background="#0A1118" CornerRadius="6" />
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.Thumb>
+                                <Thumb Background="#335C84" BorderThickness="0" Margin="1,2">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border x:Name="ThumbBorder"
+                                                    Background="{TemplateBinding Background}"
+                                                    CornerRadius="6" />
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="ThumbBorder" Property="Background" Value="#4EA3E6" />
+                                                </Trigger>
+                                                <Trigger Property="IsDragging" Value="True">
+                                                    <Setter TargetName="ThumbBorder" Property="Background" Value="#1F6FBF" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" />
+                            </Track.DecreaseRepeatButton>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Height" Value="8" />
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ScrollBar">
+                            <Grid>
+                                <Border Background="#0A1118" CornerRadius="6" />
+                                <Track x:Name="PART_Track">
+                                    <Track.Thumb>
+                                        <Thumb Background="#335C84" BorderThickness="0" Margin="2,1">
+                                            <Thumb.Template>
+                                                <ControlTemplate TargetType="Thumb">
+                                                    <Border x:Name="ThumbBorder"
+                                                            Background="{TemplateBinding Background}"
+                                                            CornerRadius="6" />
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="ThumbBorder" Property="Background" Value="#4EA3E6" />
+                                                        </Trigger>
+                                                        <Trigger Property="IsDragging" Value="True">
+                                                            <Setter TargetName="ThumbBorder" Property="Background" Value="#1F6FBF" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Thumb.Template>
+                                        </Thumb>
+                                    </Track.Thumb>
+                                    <Track.IncreaseRepeatButton>
+                                        <RepeatButton Command="ScrollBar.PageRightCommand" Opacity="0" />
+                                    </Track.IncreaseRepeatButton>
+                                    <Track.DecreaseRepeatButton>
+                                        <RepeatButton Command="ScrollBar.PageLeftCommand" Opacity="0" />
+                                    </Track.DecreaseRepeatButton>
+                                </Track>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- ═══ SLIDER ═══ -->
+    <Style TargetType="Slider">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="IsMoveToPointEnabled" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TickBar x:Name="TopTick" Grid.Row="0" Fill="#4EA3E6" Height="4" Placement="Top" Visibility="Collapsed" />
+                        <Track x:Name="PART_Track" Grid.Row="1">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="Slider.DecreaseLarge">
+                                    <RepeatButton.Template>
+                                        <ControlTemplate TargetType="RepeatButton">
+                                            <Border Background="#1F6FBF" CornerRadius="6" Height="4" />
+                                        </ControlTemplate>
+                                    </RepeatButton.Template>
+                                </RepeatButton>
+                            </Track.DecreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb x:Name="Thumb" Width="14" Height="14">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border x:Name="ThumbBorder"
+                                                    Background="{StaticResource UvssBlueBrush}"
+                                                    BorderBrush="{StaticResource UvssBlueBrightBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="7" />
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="ThumbBorder" Property="Background" Value="#2182D8" />
+                                                </Trigger>
+                                                <Trigger Property="IsDragging" Value="True">
+                                                    <Setter TargetName="ThumbBorder" Property="Background" Value="#4EA3E6" />
+                                                    <Setter TargetName="ThumbBorder" Property="BorderBrush" Value="#FFFFFFFF" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="Slider.IncreaseLarge">
+                                    <RepeatButton.Template>
+                                        <ControlTemplate TargetType="RepeatButton">
+                                            <Border Background="#2E4054" CornerRadius="6" Height="4" />
+                                        </ControlTemplate>
+                                    </RepeatButton.Template>
+                                </RepeatButton>
+                            </Track.IncreaseRepeatButton>
+                        </Track>
+                        <TickBar x:Name="BottomTick" Grid.Row="2" Fill="#4EA3E6" Height="4" Placement="Bottom" Visibility="Visible" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Thumb" Property="BorderBrush" Value="#FFFFFFFF" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══ TEXTBOX KEYBOARD FOCUS ═══ -->
+    <Style TargetType="TextBox">
+        <Setter Property="MinHeight" Value="34" />
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="Foreground" Value="{StaticResource UvssTextBrush}" />
+        <Setter Property="Background" Value="#0F1720" />
+        <Setter Property="BorderBrush" Value="#34485C" />
+        <Setter Property="CaretBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ScrollViewer x:Name="PART_ContentHost" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource UvssBlueBrightBrush}" />
+                            <Setter TargetName="Border" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 </ResourceDictionary>

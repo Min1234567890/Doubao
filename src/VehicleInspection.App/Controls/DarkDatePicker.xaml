@@ -1,0 +1,118 @@
+<UserControl x:Class="VehicleInspection.App.Controls.DarkDatePicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name="Root">
+    <Border Background="#0F1720"
+            BorderBrush="#34485C"
+            BorderThickness="1"
+            CornerRadius="6">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="32" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="DateText"
+                     Grid.Column="0"
+                     Foreground="{StaticResource UvssTextBrush}"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     CaretBrush="{StaticResource UvssBlueBrightBrush}"
+                     Padding="8,0"
+                     VerticalContentAlignment="Center"
+                     IsReadOnly="True"
+                     Cursor="Arrow"
+                     MouseLeftButtonDown="DateText_MouseLeftButtonDown" />
+
+        <ToggleButton x:Name="CalendarBtn"
+                      Grid.Column="1"
+                      Width="28" Height="28"
+                      Background="Transparent"
+                      BorderThickness="0"
+                      Foreground="{StaticResource UvssBlueBrightBrush}"
+                      FontFamily="Segoe MDL2 Assets"
+                      Content="&#xE787;"
+                      FontSize="12"
+                      Cursor="Hand"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Center"
+                      Click="CalendarBtn_Click" />
+
+        <Popup x:Name="CalendarPopup"
+               PlacementTarget="{Binding ElementName=Root}"
+               Placement="Bottom"
+               StaysOpen="False"
+               AllowsTransparency="True"
+               PopupAnimation="Fade">
+            <Border Background="#162230"
+                    BorderBrush="{StaticResource UvssBlueBrightBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="8"
+                    Width="250">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Month/Year header -->
+                    <Grid Grid.Row="0" Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="32" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Content="◀"
+                                Width="28" Height="28"
+                                MinHeight="0" MinWidth="0" Padding="0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Foreground="{StaticResource UvssBlueBrightBrush}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontWeight="Bold" FontSize="11"
+                                Cursor="Hand"
+                                Click="PrevMonth_Click" />
+                        <TextBlock Grid.Column="1"
+                                   x:Name="MonthYearHeader"
+                                   Text="June 2026"
+                                   Foreground="#FFFFFF"
+                                   FontWeight="Bold" FontSize="13"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                        <Button Grid.Column="2"
+                                Content="▶"
+                                Width="28" Height="28"
+                                MinHeight="0" MinWidth="0" Padding="0"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Foreground="{StaticResource UvssBlueBrightBrush}"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontWeight="Bold" FontSize="11"
+                                Cursor="Hand"
+                                Click="NextMonth_Click" />
+                    </Grid>
+
+                    <!-- Day-of-week headers -->
+                    <UniformGrid Grid.Row="1" Columns="7" Margin="0,0,0,4">
+                        <TextBlock Text="Su" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" />
+                        <TextBlock Text="Mo" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" />
+                        <TextBlock Text="Tu" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" />
+                        <TextBlock Text="We" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" />
+                        <TextBlock Text="Th" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" />
+                        <TextBlock Text="Fr" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" />
+                        <TextBlock Text="Sa" Foreground="#FFFFFF" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" />
+                    </UniformGrid>
+
+                    <!-- Day buttons grid -->
+                    <UniformGrid x:Name="DayGrid" Grid.Row="2" Columns="7" />
+                </Grid>
+            </Border>
+        </Popup>
+        </Grid>
+    </Border>
+</UserControl>

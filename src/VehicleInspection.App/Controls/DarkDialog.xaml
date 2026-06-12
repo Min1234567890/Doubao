@@ -1,0 +1,59 @@
+<Window x:Class="VehicleInspection.App.Controls.DarkDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        SizeToContent="WidthAndHeight"
+        WindowStartupLocation="CenterOwner"
+        Topmost="True"
+        Background="{StaticResource UvssPanelBrush}"
+        MinWidth="320" MaxWidth="480">
+    <Border Background="{StaticResource UvssPanelBrush}"
+            BorderBrush="#33465A"
+            BorderThickness="1"
+            CornerRadius="6">
+        <Grid Margin="28,24">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Title -->
+            <TextBlock x:Name="TitleText"
+                       Grid.Row="0"
+                       Text="Exit"
+                       Foreground="#FFFFFF"
+                       FontWeight="Bold" FontSize="16"
+                       Margin="0,0,0,12" />
+
+            <!-- Message -->
+            <TextBlock x:Name="MessageText"
+                       Grid.Row="1"
+                       Text="Are you sure you want to exit?"
+                       Foreground="{StaticResource UvssMutedTextBrush}"
+                       FontSize="13"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,20"
+                       MaxWidth="400" />
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button x:Name="CancelButton"
+                        Content="No"
+                        Width="80" Height="34"
+                        Margin="0,0,12,0"
+                        Background="#2E4054"
+                        BorderBrush="#516173"
+                        Foreground="{StaticResource UvssMutedTextBrush}"
+                        Click="CancelButton_Click" />
+                <Button x:Name="ConfirmButton"
+                        Content="Yes"
+                        Width="80" Height="34"
+                        Click="ConfirmButton_Click" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>
