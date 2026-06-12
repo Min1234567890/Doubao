@@ -39,6 +39,26 @@ public sealed class HttpInspectionRepository : IInspectionRepository
         return Task.CompletedTask;
     }
 
+    public Task<InspectionRecord?> GetPreviousByLicensePlateAsync(string licensePlate, string excludeTriggerId, CancellationToken cancellationToken = default)
+    {
+        return _client.GetPreviousByLicensePlateAsync(licensePlate, excludeTriggerId, cancellationToken);
+    }
+
+    public Task UpdateLicensePlateAsync(Guid inspectionId, string licensePlate, string licensePlateHash, CancellationToken cancellationToken = default)
+    {
+        return _client.UpdateLicensePlateAsync(inspectionId, licensePlate, licensePlateHash, cancellationToken);
+    }
+
+    public Task UpdateInspectionStatusAsync(Guid inspectionId, InspectionStatus status, CancellationToken cancellationToken = default)
+    {
+        return _client.UpdateInspectionStatusAsync(inspectionId, status, cancellationToken);
+    }
+
+    public Task UpdateNotesAsync(Guid inspectionId, string notes, CancellationToken cancellationToken = default)
+    {
+        return _client.UpdateNotesAsync(inspectionId, notes, cancellationToken);
+    }
+
     public Task<IReadOnlyList<AuditEntry>> GetAuditEntriesAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult<IReadOnlyList<AuditEntry>>(_auditEntries.ToList());

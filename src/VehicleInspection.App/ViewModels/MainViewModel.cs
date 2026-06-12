@@ -1,5 +1,6 @@
 using System.Net;
 using System.Windows;
+using VehicleInspection.App.Localization;
 using VehicleInspection.App.Services;
 using VehicleInspection.Application.Models;
 using VehicleInspection.Application.Security;
@@ -12,11 +13,10 @@ public sealed class MainViewModel : ViewModelBase
     private readonly UserSession _session;
     private readonly AuditService _auditService;
     private readonly WindowsAuthenticationResult _authenticationResult;
-    private readonly SessionLockService _sessionLockService;
     private readonly TcpDeviceSocketListener _socketListener;
     private string _activeView = "Dashboard";
-    private string _socketStatus = "Socket listener stopped";
-    private bool _isChinese;
+    private string _socketStatus = Loc.Get("SocketStopped");
+    private int _languageIndex;
 
     public MainViewModel()
     {
@@ -37,7 +37,6 @@ public sealed class MainViewModel : ViewModelBase
         _socketListener = new TcpDeviceSocketListener(ingestionForwarder, IPAddress.Loopback, 47011, 10 * 1024 * 1024);
         _socketListener.StatusChanged += (_, status) => SocketStatus = status;
         ingestionForwarder.MessageIgnored += (_, message) => SocketStatus = message;
-        _sessionLockService = new SessionLockService();
         _session = _authenticationResult.Session;
         Dashboard = new DashboardViewModel(inspectionService, _session);
         Reports = new ReportViewModel(inspectionService, exportService, accessControlService, _session);
@@ -45,7 +44,7 @@ public sealed class MainViewModel : ViewModelBase
         ShowDashboardCommand = new RelayCommand(_ => ActiveView = "Dashboard");
         ShowReportsCommand = new RelayCommand(_ => ActiveView = "Reports");
         ToggleLanguageCommand = new RelayCommand(_ => ToggleLanguage());
-        LockCommand = new RelayCommand(_ => LockSession());
+        ExitCommand = new RelayCommand(_ => Exit());
     }
 
     public DashboardViewModel Dashboard { get; }
@@ -53,7 +52,7 @@ public sealed class MainViewModel : ViewModelBase
     public RelayCommand ShowDashboardCommand { get; }
     public RelayCommand ShowReportsCommand { get; }
     public RelayCommand ToggleLanguageCommand { get; }
-    public RelayCommand LockCommand { get; }
+    public RelayCommand ExitCommand { get; }
     public string UserName => _session.UserName;
     public string RoleName => _session.Role.ToString();
     public string AuthenticationProvider => _session.AuthenticationProvider;
@@ -81,11 +80,34 @@ public sealed class MainViewModel : ViewModelBase
         }
     }
 
-    public bool IsChinese
+    public int LanguageIndex
     {
-        get => _isChinese;
-        private set => SetProperty(ref _isChinese, value);
+        get => _languageIndex;
+        private set
+        {
+            if (SetProperty(ref _languageIndex, value))
+            {
+                OnPropertyChanged(nameof(IsEnglish));
+                OnPropertyChanged(nameof(IsArabic));
+                OnPropertyChanged(nameof(IsMalay));
+                OnPropertyChanged(nameof(IsThai));
+                OnPropertyChanged(nameof(LanguageLabel));
+            }
+        }
     }
+
+    public bool IsEnglish => _languageIndex == 0;
+    public bool IsArabic => _languageIndex == 1;
+    public bool IsMalay => _languageIndex == 2;
+    public bool IsThai => _languageIndex == 3;
+    public string LanguageLabel => _languageIndex switch
+    {
+        0 => "عربي",
+        1 => "Melayu",
+        2 => "ไทย",
+        3 => "English",
+        _ => "عربي"
+    };
 
     public async Task InitializeAsync()
     {
@@ -103,15 +125,22 @@ public sealed class MainViewModel : ViewModelBase
 
     private void ToggleLanguage()
     {
-        IsChinese = !IsChinese;
+        LanguageIndex = (_languageIndex + 1) % 4;
         _session.Touch();
     }
 
-    private void LockSession()
+    private void Exit()
     {
-        _session.Lock();
-        OnPropertyChanged(nameof(SessionState));
+        var result = MessageBox.Show(
+            Loc.Get("ExitConfirm"),
+            Loc.Get("Exit"),
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Question);
+
+        if (result == MessageBoxResult.Yes)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 
-    public string SessionState => _session.IsLocked ? "Locked" : _sessionLockService.ShouldLock(_session, DateTimeOffset.UtcNow) ? "Idle lock pending" : "Active";
 }

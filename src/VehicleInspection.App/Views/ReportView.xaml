@@ -5,13 +5,17 @@
     <Grid Margin="18">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="1.1*" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height="1.2*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Border Style="{StaticResource PanelBorder}" Margin="0,0,0,14">
-            <Grid>
+            <Grid VerticalAlignment="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="34" />
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
@@ -21,39 +25,59 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Margin="0,0,12,0">
-                    <TextBlock Text="{DynamicResource DateFrom}" Style="{StaticResource EyebrowText}" />
-                    <DatePicker SelectedDate="{Binding FromDate}" />
-                </StackPanel>
-                <StackPanel Grid.Column="1" Margin="0,0,12,0">
-                    <TextBlock Text="{DynamicResource DateTo}" Style="{StaticResource EyebrowText}" />
-                    <DatePicker SelectedDate="{Binding ToDate}" />
-                </StackPanel>
-                <StackPanel Grid.Column="2" Margin="0,0,12,0">
-                    <TextBlock Text="{DynamicResource LicensePlate}" Style="{StaticResource EyebrowText}" />
-                    <TextBox Text="{Binding LicensePlate, UpdateSourceTrigger=PropertyChanged}" />
-                </StackPanel>
-                <StackPanel Grid.Column="3" Margin="0,0,12,0">
-                    <TextBlock Text="{DynamicResource Status}" Style="{StaticResource EyebrowText}" />
-                    <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding SelectedStatus}" />
-                </StackPanel>
-                <CheckBox Grid.Column="4" Content="{DynamicResource FodOnly}" IsChecked="{Binding FodAlertsOnly}" VerticalAlignment="Bottom" Margin="0,0,12,8" Foreground="{StaticResource UvssTextBrush}" />
-                <Button Grid.Column="5" Content="{DynamicResource ApplyFilters}" Command="{Binding ApplyFiltersCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Margin="0,0,10,0" />
-                <Button Grid.Column="6" Content="{DynamicResource ExportCsv}" Command="{Binding ExportCsvCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" Margin="0,0,10,0" />
-                <Button Grid.Column="7" Content="{DynamicResource ExportPdf}" Command="{Binding ExportPdfCommand}" Style="{StaticResource PrimaryButton}" VerticalAlignment="Bottom" />
+                <!-- Row 0: labels -->
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource DateFrom}" Style="{StaticResource EyebrowText}" Margin="0,0,12,4" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{DynamicResource DateTo}" Style="{StaticResource EyebrowText}" Margin="0,0,12,4" />
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="{DynamicResource LicensePlate}" Style="{StaticResource EyebrowText}" Margin="0,0,12,4" />
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="{DynamicResource Status}" Style="{StaticResource EyebrowText}" Margin="0,0,12,4" />
+                <!-- Row 1: inputs, all same height -->
+                <DatePicker Grid.Row="1" Grid.Column="0" SelectedDate="{Binding FromDate}" Height="34" VerticalAlignment="Center" Margin="0,0,12,0" />
+                <DatePicker Grid.Row="1" Grid.Column="1" SelectedDate="{Binding ToDate}" Height="34" VerticalAlignment="Center" Margin="0,0,12,0" />
+                <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding LicensePlate, UpdateSourceTrigger=PropertyChanged}" Height="34" VerticalAlignment="Center" Margin="0,0,12,0" />
+                <ComboBox Grid.Row="1" Grid.Column="3" Margin="0,0,12,0"
+                          ItemsSource="{Binding StatusFilterOptions}"
+                          SelectedItem="{Binding StatusFilterText}"
+                          Height="34" VerticalAlignment="Center" />
+                <CheckBox Grid.Row="1" Grid.Column="4" Content="{DynamicResource FodOnly}" IsChecked="{Binding FodAlertsOnly}" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="{StaticResource UvssTextBrush}" />
+                <Button Grid.Row="1" Grid.Column="5" Content="{DynamicResource ApplyFilters}" Command="{Binding ApplyFiltersCommand}" Style="{StaticResource PrimaryButton}" Height="34" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <Button Grid.Row="1" Grid.Column="6" Content="{DynamicResource ExportCsv}" Command="{Binding ExportCsvCommand}" Style="{StaticResource PrimaryButton}" Height="34" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <Button Grid.Row="1" Grid.Column="7" Content="{DynamicResource ExportPdf}" Command="{Binding ExportPdfCommand}" Style="{StaticResource PrimaryButton}" Height="34" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <Button Grid.Row="1" Grid.Column="8" Content="{DynamicResource ExportCurrentRecord}" Command="{Binding ExportCurrentRecordCommand}" Style="{StaticResource PrimaryButton}" Height="34" VerticalAlignment="Center" />
             </Grid>
         </Border>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False" AlternationCount="2">
+        <DataGrid x:Name="SearchDataGrid" Grid.Row="1" ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord, Mode=TwoWay}" AutoGenerateColumns="False" AlternationCount="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Scan Time" Binding="{Binding ScanTime}" Width="190" />
-                <DataGridTextColumn Header="Plate" Binding="{Binding LicensePlate}" Width="120" />
-                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="110" />
-                <DataGridTextColumn Header="Lane" Binding="{Binding Lane}" Width="180" />
-                <DataGridTextColumn Header="Operator" Binding="{Binding OperatorName}" Width="150" />
-                <DataGridTextColumn Header="FOD" Binding="{Binding FodAlerts.Count}" Width="80" />
-                <DataGridTextColumn Header="System" Binding="{Binding SystemHealth}" Width="*" />
+                <DataGridTextColumn Header="{DynamicResource ScanTime}" Binding="{Binding ScanTime}" Width="190" />
+                <DataGridTemplateColumn Header="{DynamicResource Plate}" Width="120">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding LicensePlate, Mode=OneWay}"
+                                     FontFamily="Consolas" FontWeight="SemiBold"
+                                     Foreground="{StaticResource UvssBlueBrightBrush}"
+                                     CaretBrush="{StaticResource UvssBlueBrightBrush}"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Padding="4,2"
+                                     KeyDown="PlateTextBox_KeyDown"
+                                     LostFocus="PlateTextBox_LostFocus" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{DynamicResource Status}" Width="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status, Converter={StaticResource StatusDisplayConverter}}"
+                                       VerticalAlignment="Center" Margin="4,0" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="{DynamicResource Lane}" Binding="{Binding Lane}" Width="180" />
+                <DataGridTextColumn Header="{DynamicResource Operator}" Binding="{Binding OperatorName}" Width="150" />
+                <DataGridTextColumn Header="{DynamicResource FodHeader}" Binding="{Binding FodAlerts.Count}" Width="80" />
+                <DataGridTextColumn Header="{DynamicResource SystemHeader}" Binding="{Binding SystemHealth}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
@@ -61,21 +85,62 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <DockPanel Margin="0,0,0,12">
-                    <TextBlock Text="SELECTED RECORD DEVICE IMAGES" Style="{StaticResource EyebrowText}" DockPanel.Dock="Left" />
-                    <TextBlock Text="{Binding SelectedRecord.TriggerId, StringFormat=Trigger: {0}}" Style="{StaticResource MutedText}" DockPanel.Dock="Right" />
+                <DockPanel Margin="0,0,0,8">
+                    <TextBlock Text="{DynamicResource SelectedRecord}" Style="{StaticResource EyebrowText}" DockPanel.Dock="Left" />
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                        <TextBlock Text="{DynamicResource Trigger}" Style="{StaticResource MutedText}" />
+                        <TextBlock Text=": " Style="{StaticResource MutedText}" />
+                        <TextBlock Text="{Binding SelectedRecord.TriggerId}" Style="{StaticResource MutedText}" />
+                    </StackPanel>
                 </DockPanel>
-                <UniformGrid Grid.Row="1" Columns="3">
+                <!-- Notes row -->
+                <Border Grid.Row="1" Margin="0,0,0,10" Padding="6,4" Background="#0F1720" BorderBrush="#34485C" BorderThickness="1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{DynamicResource NotesLabel}" Style="{StaticResource EyebrowText}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                            <TextBox Grid.Column="1"
+                                     Text="{Binding SelectedRecord.Notes, UpdateSourceTrigger=PropertyChanged}"
+                                     TextWrapping="Wrap" AcceptsReturn="True"
+                                     MinHeight="24" MaxHeight="60"
+                                     VerticalScrollBarVisibility="Auto"
+                                     KeyDown="NotesTextBox_KeyDown"
+                                     LostFocus="NotesTextBox_LostFocus" />
+                        </Grid>
+                    </Border>
+                <UniformGrid Grid.Row="2" Columns="3">
                     <Border Background="#101820" BorderBrush="#335C84" BorderThickness="1" Margin="0,0,10,0" Padding="10">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="UVSS UNDER VEHICLE" Style="{StaticResource EyebrowText}" />
-                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="Selected record UVSS image" ImagePath="{Binding SelectedRecord.UnderVehicleImagePath}" />
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{DynamicResource UvssUnderVehicle}" Style="{StaticResource EyebrowText}" />
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right"
+                                            Visibility="{Binding HasSelectedUvssImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <TextBlock Text="{DynamicResource Roi}" Style="{StaticResource EyebrowText}" FontSize="10" VerticalAlignment="Center" Margin="0,0,4,0" />
+                                    <Slider Minimum="1" Maximum="5"
+                                            Value="{Binding SensitivityLevel, Mode=TwoWay}"
+                                            TickFrequency="1" IsSnapToTickEnabled="True" Width="80" />
+                                    <TextBlock Text="{Binding SensitivityLevel, StringFormat=L{0}}"
+                                               Foreground="{StaticResource UvssBlueBrightBrush}" FontSize="10" FontWeight="Bold"
+                                               VerticalAlignment="Center" Margin="4,0,0,0" />
+                                </StackPanel>
+                            </Grid>
+                            <controls:ZoomPanImageControl x:Name="SearchUvss" Grid.Row="1" Margin="0,10,0,0"
+                                PlaceholderText="{DynamicResource SelectedRecordUvssPlaceholder}"
+                                ImagePath="{Binding SelectedRecord.UnderVehicleImagePath}"
+                                ShowRoiOverlay="{Binding HasSelectedUvssImage}" SensitivityLevel="{Binding SensitivityLevel, Mode=OneWay}" />
                         </Grid>
                     </Border>
                     <Border Background="#101820" BorderBrush="#335C84" BorderThickness="1" Margin="0,0,10,0" Padding="10">
@@ -84,8 +149,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="VLPR PLATE IMAGE" Style="{StaticResource EyebrowText}" />
-                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="Selected record VLPR image" ImagePath="{Binding SelectedRecord.LicensePlateImagePath}" />
+                            <TextBlock Text="{DynamicResource XrayImage}" Style="{StaticResource EyebrowText}" />
+                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="{DynamicResource SelectedRecordXrayPlaceholder}" ImagePath="{Binding SelectedRecord.XrayImagePath}" />
                         </Grid>
                     </Border>
                     <Border Background="#101820" BorderBrush="#335C84" BorderThickness="1" Padding="10">
@@ -94,8 +159,8 @@
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <TextBlock Text="X-RAY IMAGE" Style="{StaticResource EyebrowText}" />
-                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="Selected record X-ray image" ImagePath="{Binding SelectedRecord.XrayImagePath}" />
+                            <TextBlock Text="{DynamicResource VlprPlateImage}" Style="{StaticResource EyebrowText}" />
+                            <controls:ZoomPanImageControl Grid.Row="1" Margin="0,10,0,0" PlaceholderText="{DynamicResource SelectedRecordVlprPlaceholder}" ImagePath="{Binding SelectedRecord.LicensePlateImagePath}" />
                         </Grid>
                     </Border>
                 </UniformGrid>

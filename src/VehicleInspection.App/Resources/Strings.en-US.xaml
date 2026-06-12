@@ -3,21 +3,35 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <sys:String x:Key="AppTitle">UVSS Vehicle Inspection Command</sys:String>
     <sys:String x:Key="Dashboard">Dashboard</sys:String>
-    <sys:String x:Key="Reports">Reports</sys:String>
-    <sys:String x:Key="ScanTime">Scan Time</sys:String>
-    <sys:String x:Key="InspectionStatus">Inspection Status</sys:String>
+    <sys:String x:Key="Reports">Search</sys:String>
     <sys:String x:Key="Language">中文</sys:String>
     <sys:String x:Key="User">User</sys:String>
     <sys:String x:Key="Role">Role</sys:String>
-    <sys:String x:Key="Lock">Lock</sys:String>
-    <sys:String x:Key="UnderVehicleImage">Undervehicle Image</sys:String>
-    <sys:String x:Key="FullVehicleImage">Full Vehicle Image</sys:String>
-    <sys:String x:Key="LicensePlateImage">License Plate OCR</sys:String>
-    <sys:String x:Key="XrayFod">X-ray / FOD Analysis</sys:String>
-    <sys:String x:Key="InspectionSummary">Inspection Summary</sys:String>
-    <sys:String x:Key="SystemStatus">System Status</sys:String>
-    <sys:String x:Key="OperatorNotes">Operator Notes</sys:String>
-    <sys:String x:Key="FilterReports">Filter Reports</sys:String>
+
+    <!-- Brand -->
+    <sys:String x:Key="BrandName">TeleRadio</sys:String>
+    <sys:String x:Key="BrandSubtitle">Vehicle Screening</sys:String>
+
+    <!-- Top bar -->
+    <sys:String x:Key="Socket">SOCKET</sys:String>
+
+    <!-- Dashboard labels -->
+    <sys:String x:Key="UvssCurrentScan">UVSS: CURRENT SCAN</sys:String>
+    <sys:String x:Key="UvssPreviousScan">UVSS: PREVIOUS SCAN</sys:String>
+    <sys:String x:Key="UvssPlaceholder">Under-vehicle scan — zoom wheel / drag to pan</sys:String>
+    <sys:String x:Key="NoPreviousScanPlaceholder">No previous scan with this license plate</sys:String>
+    <sys:String x:Key="Roi">ROI</sys:String>
+    <sys:String x:Key="Live">LIVE</sys:String>
+    <sys:String x:Key="VlprPlateImage">VLPR PLATE IMAGE</sys:String>
+    <sys:String x:Key="VlprPlaceholder">License plate OCR capture</sys:String>
+    <sys:String x:Key="XrayImage">X-RAY IMAGE</sys:String>
+    <sys:String x:Key="XrayPlaceholder">X-ray image</sys:String>
+    <sys:String x:Key="OperatorNotesLabel">OPERATOR NOTES</sys:String>
+    <sys:String x:Key="NotesLabel">NOTES</sys:String>
+    <sys:String x:Key="FodLabel">FOD</sys:String>
+
+    <!-- Search labels -->
+    <sys:String x:Key="FilterReports">Search Records</sys:String>
     <sys:String x:Key="DateFrom">From</sys:String>
     <sys:String x:Key="DateTo">To</sys:String>
     <sys:String x:Key="LicensePlate">License Plate</sys:String>
@@ -26,4 +40,56 @@
     <sys:String x:Key="ApplyFilters">Apply Filters</sys:String>
     <sys:String x:Key="ExportCsv">Export CSV</sys:String>
     <sys:String x:Key="ExportPdf">Export PDF</sys:String>
+    <sys:String x:Key="ExportCurrentRecord">Export Current Record</sys:String>
+    <sys:String x:Key="Exit">Exit</sys:String>
+    <sys:String x:Key="ExitConfirm">Are you sure you want to exit the application?</sys:String>
+    <sys:String x:Key="SelectedRecord">SELECTED RECORD</sys:String>
+    <sys:String x:Key="UvssUnderVehicle">UVSS UNDER VEHICLE</sys:String>
+    <sys:String x:Key="SelectedRecordUvssPlaceholder">Selected record UVSS image</sys:String>
+    <sys:String x:Key="SelectedRecordXrayPlaceholder">Selected record X-ray image</sys:String>
+    <sys:String x:Key="SelectedRecordVlprPlaceholder">Selected record VLPR image</sys:String>
+
+    <!-- Table headers -->
+    <sys:String x:Key="ScanTime">Scan Time</sys:String>
+    <sys:String x:Key="Plate">Plate</sys:String>
+    <sys:String x:Key="Lane">Lane</sys:String>
+    <sys:String x:Key="Operator">Operator</sys:String>
+    <sys:String x:Key="FodHeader">FOD</sys:String>
+    <sys:String x:Key="SystemHeader">System</sys:String>
+    <sys:String x:Key="Trigger">Trigger</sys:String>
+
+    <!-- Status enum -->
+    <sys:String x:Key="StatusPending">Pending</sys:String>
+    <sys:String x:Key="StatusClear">Clear</sys:String>
+    <sys:String x:Key="StatusReview">Review</sys:String>
+    <sys:String x:Key="StatusHold">Hold</sys:String>
+    <sys:String x:Key="StatusEscalated">Escalated</sys:String>
+
+    <!-- Dashboard messages -->
+    <sys:String x:Key="NoFod">No FOD</sys:String>
+    <sys:String x:Key="FodAlerts">{0} ({1} alerts)</sys:String>
+    <sys:String x:Key="AllSubsystemsOperational">All subsystems operational</sys:String>
+    <sys:String x:Key="CriticalTotalAlerts">{0} critical / {1} total alerts</sys:String>
+    <sys:String x:Key="XrayAvailable">X-ray available</sys:String>
+    <sys:String x:Key="FodActive">FOD active</sys:String>
+    <sys:String x:Key="FodSeverityClear">Clear</sys:String>
+    <sys:String x:Key="FodSeverityCritical">Critical</sys:String>
+    <sys:String x:Key="FodSeverityHigh">High</sys:String>
+    <sys:String x:Key="FodSeverityMedium">Medium</sys:String>
+    <sys:String x:Key="FodSeverityLow">Low</sys:String>
+    <sys:String x:Key="SensitivityL1">L1 — Critical only</sys:String>
+    <sys:String x:Key="SensitivityL2">L2 — High+</sys:String>
+    <sys:String x:Key="SensitivityL3">L3 — Medium+</sys:String>
+    <sys:String x:Key="SensitivityL4">L4 — Low+</sys:String>
+    <sys:String x:Key="SensitivityL5">L5 — All detections</sys:String>
+    <sys:String x:Key="SocketStopped">Socket listener stopped</sys:String>
+    <sys:String x:Key="StatusAll">All</sys:String>
+    <sys:String x:Key="Reset">Reset</sys:String>
+
+    <!-- Search status messages -->
+    <sys:String x:Key="RecordsLoaded">{0} records loaded. Export permission: {1}</sys:String>
+    <sys:String x:Key="LicensePlateUpdatedMsg">License plate updated: {0} → {1}</sys:String>
+    <sys:String x:Key="UpdateFailed">Update failed: {0}</sys:String>
+    <sys:String x:Key="StatusUpdatedMsg">Status updated: {0} → {1}</sys:String>
+    <sys:String x:Key="NoRecordSelectedForExport">No record selected for export.</sys:String>
 </ResourceDictionary>

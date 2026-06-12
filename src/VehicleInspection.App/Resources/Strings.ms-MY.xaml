@@ -1,0 +1,95 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">UVSS Komando Pemeriksaan Kenderaan</sys:String>
+    <sys:String x:Key="Dashboard">Papan Pemuka</sys:String>
+    <sys:String x:Key="Reports">Carian</sys:String>
+    <sys:String x:Key="Language">English</sys:String>
+    <sys:String x:Key="User">Pengguna</sys:String>
+    <sys:String x:Key="Role">Peranan</sys:String>
+
+    <!-- Brand -->
+    <sys:String x:Key="BrandName">TeleRadio</sys:String>
+    <sys:String x:Key="BrandSubtitle">Pemeriksaan Kenderaan</sys:String>
+
+    <!-- Top bar -->
+    <sys:String x:Key="Socket">Komunikasi</sys:String>
+
+    <!-- Dashboard labels -->
+    <sys:String x:Key="UvssCurrentScan">UVSS: IMBASAN SEMASA</sys:String>
+    <sys:String x:Key="UvssPreviousScan">UVSS: IMBASAN SEBELUM</sys:String>
+    <sys:String x:Key="UvssPlaceholder">Imej bawah kenderaan — zum / seret</sys:String>
+    <sys:String x:Key="NoPreviousScanPlaceholder">Tiada imbasan sebelum untuk plat ini</sys:String>
+    <sys:String x:Key="Roi">ROI</sys:String>
+    <sys:String x:Key="Live">LANGSUNG</sys:String>
+    <sys:String x:Key="VlprPlateImage">IMEJ PLAT VLPR</sys:String>
+    <sys:String x:Key="VlprPlaceholder">Tangkapan OCR plat</sys:String>
+    <sys:String x:Key="XrayImage">IMEJ X-RAY</sys:String>
+    <sys:String x:Key="XrayPlaceholder">Imej X-ray</sys:String>
+    <sys:String x:Key="OperatorNotesLabel">NOTA OPERATOR</sys:String>
+    <sys:String x:Key="NotesLabel">NOTA</sys:String>
+    <sys:String x:Key="FodLabel">FOD</sys:String>
+
+    <!-- Search labels -->
+    <sys:String x:Key="FilterReports">Carian Rekod</sys:String>
+    <sys:String x:Key="DateFrom">Dari</sys:String>
+    <sys:String x:Key="DateTo">Hingga</sys:String>
+    <sys:String x:Key="LicensePlate">Plat Kenderaan</sys:String>
+    <sys:String x:Key="Status">Status</sys:String>
+    <sys:String x:Key="FodOnly">Amaran FOD sahaja</sys:String>
+    <sys:String x:Key="ApplyFilters">Guna Penapis</sys:String>
+    <sys:String x:Key="ExportCsv">Eksport CSV</sys:String>
+    <sys:String x:Key="ExportPdf">Eksport PDF</sys:String>
+    <sys:String x:Key="ExportCurrentRecord">Eksport Rekod Semasa</sys:String>
+    <sys:String x:Key="Exit">Keluar</sys:String>
+    <sys:String x:Key="ExitConfirm">Adakah anda pasti untuk keluar dari aplikasi?</sys:String>
+    <sys:String x:Key="SelectedRecord">REKOD DIPILIH</sys:String>
+    <sys:String x:Key="UvssUnderVehicle">UVSS BAWAH KENDERAAN</sys:String>
+    <sys:String x:Key="SelectedRecordUvssPlaceholder">Imej UVSS rekod dipilih</sys:String>
+    <sys:String x:Key="SelectedRecordXrayPlaceholder">Imej X-ray rekod dipilih</sys:String>
+    <sys:String x:Key="SelectedRecordVlprPlaceholder">Imej plat rekod dipilih</sys:String>
+
+    <!-- Table headers -->
+    <sys:String x:Key="ScanTime">Masa Imbasan</sys:String>
+    <sys:String x:Key="Plate">Plat</sys:String>
+    <sys:String x:Key="Lane">Lorong</sys:String>
+    <sys:String x:Key="Operator">Operator</sys:String>
+    <sys:String x:Key="FodHeader">FOD</sys:String>
+    <sys:String x:Key="SystemHeader">Sistem</sys:String>
+    <sys:String x:Key="Trigger">Pencetus</sys:String>
+
+    <!-- Status enum -->
+    <sys:String x:Key="StatusPending">Tertunda</sys:String>
+    <sys:String x:Key="StatusClear">Lulus</sys:String>
+    <sys:String x:Key="StatusReview">Semak</sys:String>
+    <sys:String x:Key="StatusHold">Tahan</sys:String>
+    <sys:String x:Key="StatusEscalated">Eskalasi</sys:String>
+
+    <!-- Dashboard messages -->
+    <sys:String x:Key="NoFod">Tiada FOD</sys:String>
+    <sys:String x:Key="FodAlerts">{0} ({1} amaran)</sys:String>
+    <sys:String x:Key="AllSubsystemsOperational">Semua subsistem beroperasi</sys:String>
+    <sys:String x:Key="CriticalTotalAlerts">{0} kritikal / {1} jumlah amaran</sys:String>
+    <sys:String x:Key="XrayAvailable">X-ray tersedia</sys:String>
+    <sys:String x:Key="FodActive">FOD aktif</sys:String>
+    <sys:String x:Key="FodSeverityClear">Bersih</sys:String>
+    <sys:String x:Key="FodSeverityCritical">Kritikal</sys:String>
+    <sys:String x:Key="FodSeverityHigh">Tinggi</sys:String>
+    <sys:String x:Key="FodSeverityMedium">Sederhana</sys:String>
+    <sys:String x:Key="FodSeverityLow">Rendah</sys:String>
+    <sys:String x:Key="SensitivityL1">L1 — Kritikal sahaja</sys:String>
+    <sys:String x:Key="SensitivityL2">L2 — Tinggi+</sys:String>
+    <sys:String x:Key="SensitivityL3">L3 — Sederhana+</sys:String>
+    <sys:String x:Key="SensitivityL4">L4 — Rendah+</sys:String>
+    <sys:String x:Key="SensitivityL5">L5 — Semua</sys:String>
+    <sys:String x:Key="SocketStopped">Pendengar soket dihentikan</sys:String>
+    <sys:String x:Key="StatusAll">Semua</sys:String>
+
+    <!-- Search status messages -->
+    <sys:String x:Key="RecordsLoaded">{0} rekod dimuat. Keizinan: {1}</sys:String>
+    <sys:String x:Key="LicensePlateUpdatedMsg">Plat dikemas kini: {0} ← {1}</sys:String>
+    <sys:String x:Key="UpdateFailed">Kemas kini gagal: {0}</sys:String>
+    <sys:String x:Key="StatusUpdatedMsg">Status dikemas kini: {0} ← {1}</sys:String>
+    <sys:String x:Key="NoRecordSelectedForExport">Tiada rekod dipilih untuk eksport.</sys:String>
+    <sys:String x:Key="Reset">Set Semula</sys:String>
+</ResourceDictionary>

@@ -1,0 +1,95 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">UVSS ระบบบัญชาการตรวจสอบยานพาหนะ</sys:String>
+    <sys:String x:Key="Dashboard">แผงควบคุม</sys:String>
+    <sys:String x:Key="Reports">ค้นหา</sys:String>
+    <sys:String x:Key="Language">English</sys:String>
+    <sys:String x:Key="User">ผู้ใช้</sys:String>
+    <sys:String x:Key="Role">บทบาท</sys:String>
+
+    <!-- Brand -->
+    <sys:String x:Key="BrandName">TeleRadio</sys:String>
+    <sys:String x:Key="BrandSubtitle">ตรวจสอบยานพาหนะ</sys:String>
+
+    <!-- Top bar -->
+    <sys:String x:Key="Socket">การสื่อสาร</sys:String>
+
+    <!-- Dashboard labels -->
+    <sys:String x:Key="UvssCurrentScan">UVSS: การสแกนปัจจุบัน</sys:String>
+    <sys:String x:Key="UvssPreviousScan">UVSS: การสแกนก่อนหน้า</sys:String>
+    <sys:String x:Key="UvssPlaceholder">ภาพใต้ท้องรถ — ซูม / ลาก</sys:String>
+    <sys:String x:Key="NoPreviousScanPlaceholder">ไม่มีประวัติการสแกนสำหรับป้ายนี้</sys:String>
+    <sys:String x:Key="Roi">ROI</sys:String>
+    <sys:String x:Key="Live">สด</sys:String>
+    <sys:String x:Key="VlprPlateImage">ภาพป้ายทะเบียน</sys:String>
+    <sys:String x:Key="VlprPlaceholder">การจับภาพ OCR ป้ายทะเบียน</sys:String>
+    <sys:String x:Key="XrayImage">ภาพเอกซเรย์</sys:String>
+    <sys:String x:Key="XrayPlaceholder">ภาพเอกซเรย์</sys:String>
+    <sys:String x:Key="OperatorNotesLabel">บันทึกผู้ปฏิบัติงาน</sys:String>
+    <sys:String x:Key="NotesLabel">บันทึก</sys:String>
+    <sys:String x:Key="FodLabel">วัตถุแปลกปลอม</sys:String>
+
+    <!-- Search labels -->
+    <sys:String x:Key="FilterReports">ค้นหาบันทึก</sys:String>
+    <sys:String x:Key="DateFrom">จาก</sys:String>
+    <sys:String x:Key="DateTo">ถึง</sys:String>
+    <sys:String x:Key="LicensePlate">ป้ายทะเบียน</sys:String>
+    <sys:String x:Key="Status">สถานะ</sys:String>
+    <sys:String x:Key="FodOnly">เฉพาะแจ้งเตือน FOD</sys:String>
+    <sys:String x:Key="ApplyFilters">ใช้ตัวกรอง</sys:String>
+    <sys:String x:Key="ExportCsv">ส่งออก CSV</sys:String>
+    <sys:String x:Key="ExportPdf">ส่งออก PDF</sys:String>
+    <sys:String x:Key="ExportCurrentRecord">ส่งออกบันทึกปัจจุบัน</sys:String>
+    <sys:String x:Key="Exit">ออก</sys:String>
+    <sys:String x:Key="ExitConfirm">คุณแน่ใจหรือไม่ที่จะออกจากแอปพลิเคชัน?</sys:String>
+    <sys:String x:Key="SelectedRecord">บันทึกที่เลือก</sys:String>
+    <sys:String x:Key="UvssUnderVehicle">UVSS ใต้ท้องรถ</sys:String>
+    <sys:String x:Key="SelectedRecordUvssPlaceholder">ภาพ UVSS ของบันทึกที่เลือก</sys:String>
+    <sys:String x:Key="SelectedRecordXrayPlaceholder">ภาพเอกซเรย์ของบันทึกที่เลือก</sys:String>
+    <sys:String x:Key="SelectedRecordVlprPlaceholder">ภาพป้ายของบันทึกที่เลือก</sys:String>
+
+    <!-- Table headers -->
+    <sys:String x:Key="ScanTime">เวลาสแกน</sys:String>
+    <sys:String x:Key="Plate">ป้าย</sys:String>
+    <sys:String x:Key="Lane">ช่องทาง</sys:String>
+    <sys:String x:Key="Operator">ผู้ปฏิบัติงาน</sys:String>
+    <sys:String x:Key="FodHeader">FOD</sys:String>
+    <sys:String x:Key="SystemHeader">ระบบ</sys:String>
+    <sys:String x:Key="Trigger">ตัวกระตุ้น</sys:String>
+
+    <!-- Status enum -->
+    <sys:String x:Key="StatusPending">รอดำเนินการ</sys:String>
+    <sys:String x:Key="StatusClear">ผ่าน</sys:String>
+    <sys:String x:Key="StatusReview">ตรวจสอบ</sys:String>
+    <sys:String x:Key="StatusHold">ระงับ</sys:String>
+    <sys:String x:Key="StatusEscalated">ยกระดับ</sys:String>
+
+    <!-- Dashboard messages -->
+    <sys:String x:Key="NoFod">ไม่มี FOD</sys:String>
+    <sys:String x:Key="FodAlerts">{0} ({1} การแจ้งเตือน)</sys:String>
+    <sys:String x:Key="AllSubsystemsOperational">ระบบย่อยทั้งหมดทำงานปกติ</sys:String>
+    <sys:String x:Key="CriticalTotalAlerts">{0} วิกฤต / {1} การแจ้งเตือนทั้งหมด</sys:String>
+    <sys:String x:Key="XrayAvailable">เอกซเรย์พร้อมใช้งาน</sys:String>
+    <sys:String x:Key="FodActive">FOD ทำงาน</sys:String>
+    <sys:String x:Key="FodSeverityClear">สะอาด</sys:String>
+    <sys:String x:Key="FodSeverityCritical">วิกฤต</sys:String>
+    <sys:String x:Key="FodSeverityHigh">สูง</sys:String>
+    <sys:String x:Key="FodSeverityMedium">ปานกลาง</sys:String>
+    <sys:String x:Key="FodSeverityLow">ต่ำ</sys:String>
+    <sys:String x:Key="SensitivityL1">L1 — วิกฤตเท่านั้น</sys:String>
+    <sys:String x:Key="SensitivityL2">L2 — สูง+</sys:String>
+    <sys:String x:Key="SensitivityL3">L3 — ปานกลาง+</sys:String>
+    <sys:String x:Key="SensitivityL4">L4 — ต่ำ+</sys:String>
+    <sys:String x:Key="SensitivityL5">L5 — ทั้งหมด</sys:String>
+    <sys:String x:Key="SocketStopped">หยุดการฟังซ็อกเก็ต</sys:String>
+    <sys:String x:Key="StatusAll">ทั้งหมด</sys:String>
+
+    <!-- Search status messages -->
+    <sys:String x:Key="RecordsLoaded">{0} บันทึกโหลดแล้ว สิทธิ์: {1}</sys:String>
+    <sys:String x:Key="LicensePlateUpdatedMsg">อัปเดตป้ายแล้ว: {0} ← {1}</sys:String>
+    <sys:String x:Key="UpdateFailed">อัปเดตล้มเหลว: {0}</sys:String>
+    <sys:String x:Key="StatusUpdatedMsg">อัปเดตสถานะแล้ว: {0} ← {1}</sys:String>
+    <sys:String x:Key="NoRecordSelectedForExport">ไม่มีบันทึกที่เลือกสำหรับการส่งออก</sys:String>
+    <sys:String x:Key="Reset">รีเซ็ต</sys:String>
+</ResourceDictionary>

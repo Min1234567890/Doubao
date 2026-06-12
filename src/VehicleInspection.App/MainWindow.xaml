@@ -9,59 +9,57 @@
         Topmost="False">
     <Grid Background="{StaticResource UvssDeepBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="76" />
+            <RowDefinition Height="52" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!-- ═══ COMPACT TOP BAR ═══ -->
         <Border Grid.Row="0" Background="{StaticResource UvssNavyBrush}" BorderBrush="#24384B" BorderThickness="0,0,0,1">
-            <Grid Margin="18,0">
+            <Grid Margin="14,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+
+                <!-- Left: compact brand -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Width="48" Height="48" Background="{StaticResource UvssBlueBrush}" BorderBrush="{StaticResource UvssBlueBrightBrush}" BorderThickness="1">
-                        <TextBlock Text="UV" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Black" FontSize="18" />
+                    <Border Width="36" Height="36" Background="{StaticResource UvssBlueBrush}" BorderBrush="{StaticResource UvssBlueBrightBrush}" BorderThickness="1">
+                        <TextBlock Text="UV" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Black" FontSize="14" />
                     </Border>
-                    <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="TeleRadio" FontWeight="Bold" FontSize="18" />
-                        <TextBlock Text="Vehicle Screening Systems" Style="{StaticResource MutedText}" FontSize="12" />
+                    <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource BrandName}" FontWeight="Bold" FontSize="14" />
+                        <TextBlock Text="{DynamicResource BrandSubtitle}" Style="{StaticResource MutedText}" FontSize="10" />
                     </StackPanel>
                 </StackPanel>
 
+                <!-- Center: nav buttons -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <Button Content="{DynamicResource Dashboard}" Command="{Binding ShowDashboardCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" />
-                    <Button Content="{DynamicResource Reports}" Command="{Binding ShowReportsCommand}" Style="{StaticResource PrimaryButton}" />
+                    <Button Content="{DynamicResource Dashboard}" Command="{Binding ShowDashboardCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" MinHeight="30" Padding="12,5" />
+                    <Button Content="{DynamicResource Reports}" Command="{Binding ShowReportsCommand}" Style="{StaticResource PrimaryButton}" MinHeight="30" Padding="12,5" />
                 </StackPanel>
 
+                <!-- Right: compact status + controls -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                    <StackPanel Margin="0,0,18,0">
-                        <TextBlock Text="{DynamicResource ScanTime}" Style="{StaticResource EyebrowText}" />
-                        <TextBlock Text="{Binding Dashboard.CurrentInspection.ScanTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                    <StackPanel Margin="0,0,12,0" MaxWidth="180">
+                        <TextBlock Text="{DynamicResource Socket}" Style="{StaticResource EyebrowText}" FontSize="10" />
+                        <TextBlock Text="{Binding SocketStatus}" Foreground="{StaticResource UvssBlueBrightBrush}" TextTrimming="CharacterEllipsis" FontSize="11" />
                     </StackPanel>
-                    <StackPanel Margin="0,0,18,0">
-                        <TextBlock Text="{DynamicResource InspectionStatus}" Style="{StaticResource EyebrowText}" />
-                        <TextBlock Text="{Binding Dashboard.CurrentInspection.Status}" Foreground="{Binding Dashboard.InspectionStatusBrush}" FontWeight="Bold" />
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="{DynamicResource User}" Style="{StaticResource EyebrowText}" FontSize="10" />
+                        <TextBlock Text="{Binding UserName}" FontSize="12" />
                     </StackPanel>
-                    <StackPanel Margin="0,0,18,0">
-                        <TextBlock Text="{DynamicResource User}" Style="{StaticResource EyebrowText}" />
-                        <TextBlock Text="{Binding UserName}" />
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="{DynamicResource Role}" Style="{StaticResource EyebrowText}" FontSize="10" />
+                        <TextBlock Text="{Binding RoleName}" FontSize="12" />
                     </StackPanel>
-                    <StackPanel Margin="0,0,18,0" MaxWidth="230">
-                        <TextBlock Text="SOCKET API" Style="{StaticResource EyebrowText}" />
-                        <TextBlock Text="{Binding SocketStatus}" Foreground="{StaticResource UvssBlueBrightBrush}" TextTrimming="CharacterEllipsis" />
-                    </StackPanel>
-                    <StackPanel Margin="0,0,18,0">
-                        <TextBlock Text="{DynamicResource Role}" Style="{StaticResource EyebrowText}" />
-                        <TextBlock Text="{Binding RoleName}" />
-                    </StackPanel>
-                    <Button Content="{DynamicResource Language}" Command="{Binding ToggleLanguageCommand}" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" />
-                    <Button Content="{DynamicResource Lock}" Command="{Binding LockCommand}" Style="{StaticResource PrimaryButton}" />
+                    <Button Content="{Binding LanguageLabel}" Command="{Binding ToggleLanguageCommand}" Style="{StaticResource PrimaryButton}" MinHeight="30" Padding="10,5" />
+                    <Button Content="{DynamicResource Exit}" Command="{Binding ExitCommand}" Style="{StaticResource PrimaryButton}" MinHeight="30" Padding="10,5" Margin="10,0,0,0" />
                 </StackPanel>
             </Grid>
         </Border>
 
+        <!-- ═══ CONTENT AREA ═══ -->
         <Grid Grid.Row="1">
             <views:DashboardView DataContext="{Binding Dashboard}" Visibility="Visible" x:Name="DashboardContent" />
             <views:ReportView DataContext="{Binding Reports}" Visibility="Collapsed" x:Name="ReportContent" />

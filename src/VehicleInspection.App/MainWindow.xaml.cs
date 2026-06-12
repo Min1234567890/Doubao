@@ -1,4 +1,5 @@
 using System.Windows;
+using VehicleInspection.App.Localization;
 using VehicleInspection.App.ViewModels;
 
 namespace VehicleInspection.App;
@@ -20,7 +21,7 @@ public partial class MainWindow : Window
                 UpdateActiveView();
             }
 
-            if (args.PropertyName == nameof(MainViewModel.IsChinese))
+            if (args.PropertyName == nameof(MainViewModel.LanguageIndex))
             {
                 UpdateLanguage();
             }
@@ -53,9 +54,19 @@ public partial class MainWindow : Window
             dictionaries.Remove(oldDictionary);
         }
 
+        var source = _viewModel.LanguageIndex switch
+        {
+            1 => "Resources/Strings.ar-SA.xaml",
+            2 => "Resources/Strings.ms-MY.xaml",
+            3 => "Resources/Strings.th-TH.xaml",
+            _ => "Resources/Strings.en-US.xaml"
+        };
+
         dictionaries.Add(new ResourceDictionary
         {
-            Source = new Uri(_viewModel.IsChinese ? "Resources/Strings.zh-CN.xaml" : "Resources/Strings.en-US.xaml", UriKind.Relative)
+            Source = new Uri(source, UriKind.Relative)
         });
+
+        Loc.NotifyLanguageChanged();
     }
 }

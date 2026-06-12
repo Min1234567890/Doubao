@@ -1,5 +1,9 @@
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
+using VehicleInspection.App.Localization;
 using VehicleInspection.Application.Models;
 using VehicleInspection.Application.Security;
 using VehicleInspection.Application.Services;
@@ -29,19 +33,56 @@ public sealed class ReportViewModel : ViewModelBase
         ApplyFiltersCommand = new RelayCommand(async _ => await ApplyFiltersAsync());
         ExportCsvCommand = new RelayCommand(async _ => await ExportCsvAsync(), _ => CanExport);
         ExportPdfCommand = new RelayCommand(async _ => await ExportPdfAsync(), _ => CanExport);
+        ExportCurrentRecordCommand = new RelayCommand(async _ => await ExportCurrentRecordAsync(), _ => CanExportCurrentRecord);
+        Loc.LanguageChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(StatusFilterOptions));
+            OnPropertyChanged(nameof(StatusFilterText));
+        };
     }
 
     public ObservableCollection<InspectionRecord> Records { get; } = new();
     public IReadOnlyList<InspectionStatus> StatusOptions { get; } = Enum.GetValues<InspectionStatus>();
+    public IReadOnlyList<string> StatusFilterOptions => new[] { Loc.Get("StatusAll") }.Concat(StatusDisplayConverter.GetDisplayOptions()).ToList();
+
+    private string _statusFilterText = Loc.Get("StatusAll");
+    public string StatusFilterText
+    {
+        get => _statusFilterText;
+        set
+        {
+            if (!SetProperty(ref _statusFilterText, value)) return;
+            if (value == Loc.Get("StatusAll")) { SelectedStatus = null; return; }
+            SelectedStatus = (InspectionStatus?)new StatusDisplayConverter().ConvertBack(value, typeof(InspectionStatus), null!, System.Globalization.CultureInfo.CurrentCulture);
+        }
+    }
+
     public RelayCommand ApplyFiltersCommand { get; }
     public RelayCommand ExportCsvCommand { get; }
     public RelayCommand ExportPdfCommand { get; }
+    public RelayCommand ExportCurrentRecordCommand { get; }
     public bool CanExport => _accessControlService.Can(_session.Role, Permission.ExportReports);
+    public bool CanExportCurrentRecord => CanExport && SelectedRecord is not null;
+    public bool HasSelectedUvssImage => !string.IsNullOrWhiteSpace(SelectedRecord?.UnderVehicleImagePath);
+
+    private int _sensitivityLevel = 5;
+    public int SensitivityLevel
+    {
+        get => _sensitivityLevel;
+        set => SetProperty(ref _sensitivityLevel, value);
+    }
 
     public InspectionRecord? SelectedRecord
     {
         get => _selectedRecord;
-        set => SetProperty(ref _selectedRecord, value);
+        set
+        {
+            if (SetProperty(ref _selectedRecord, value))
+            {
+                ExportCurrentRecordCommand.RaiseCanExecuteChanged();
+                OnPropertyChanged(nameof(HasSelectedUvssImage));
+            }
+        }
     }
 
     public DateTime? FromDate
@@ -99,7 +140,7 @@ public sealed class ReportViewModel : ViewModelBase
         }
 
         SelectedRecord = Records.FirstOrDefault();
-        SecurityMessage = $"{Records.Count} records loaded. Export permission: {(CanExport ? "granted" : "denied")}.";
+        SecurityMessage = Loc.Format("RecordsLoaded", Records.Count, CanExport ? "granted" : "denied");
     }
 
     private async Task ExportCsvAsync()
@@ -117,13 +158,113 @@ public sealed class ReportViewModel : ViewModelBase
         }
     }
 
+    public async Task UpdateLicensePlateAsync(InspectionRecord record, string oldPlate, string newPlate)
+    {
+        if (string.IsNullOrWhiteSpace(newPlate))
+            return;
+
+        if (string.Equals(oldPlate, newPlate, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        try
+        {
+            await _inspectionService.UpdateLicensePlateAsync(
+                _session, record.Id, oldPlate, newPlate);
+
+            record.LicensePlate = newPlate;
+            record.LicensePlateHash = ComputeHashForLocal(newPlate);
+
+            // Refresh the DataGrid by replacing the record in the collection
+            var index = Records.IndexOf(record);
+            if (index >= 0)
+            {
+                Records[index] = record;
+            }
+
+            SecurityMessage = Loc.Format("LicensePlateUpdatedMsg", oldPlate, newPlate);
+        }
+        catch (Exception ex)
+        {
+            SecurityMessage = Loc.Format("UpdateFailed", ex.Message);
+        }
+    }
+
+    public async Task UpdateNotesAsync(InspectionRecord record, string notes)
+    {
+        try
+        {
+            await _inspectionService.UpdateNotesAsync(_session, record.Id, notes);
+            record.Notes = notes;
+            var index = Records.IndexOf(record);
+            if (index >= 0) Records[index] = record;
+        }
+        catch (Exception ex)
+        {
+            SecurityMessage = Loc.Format("UpdateFailed", ex.Message);
+        }
+    }
+
+    public async Task UpdateInspectionStatusAsync(InspectionRecord record, InspectionStatus oldStatus, InspectionStatus newStatus)
+    {
+        if (oldStatus == newStatus)
+            return;
+
+        try
+        {
+            await _inspectionService.UpdateInspectionStatusAsync(_session, record.Id, oldStatus, newStatus);
+            record.Status = newStatus;
+
+            var index = Records.IndexOf(record);
+            if (index >= 0)
+            {
+                Records[index] = record;
+            }
+
+            SecurityMessage = Loc.Format("StatusUpdatedMsg", oldStatus, newStatus);
+        }
+        catch (Exception ex)
+        {
+            SecurityMessage = Loc.Format("UpdateFailed", ex.Message);
+        }
+    }
+
+    private static string ComputeHashForLocal(string value)
+    {
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(value.ToUpperInvariant()));
+        return Convert.ToHexString(bytes);
+    }
+
     private async Task ExportPdfAsync()
     {
         try
         {
-            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"uvss-report-{DateTime.Now:yyyyMMdd-HHmmss}.pdf.txt");
-            await _exportService.ExportPdfManifestAsync(_session, Records, path);
-            SecurityMessage = $"PDF manifest exported and audited: {path}";
+            var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), $"uvss-report-{DateTime.Now:yyyyMMdd-HHmmss}.pdf");
+            await _exportService.ExportPdfAsync(_session, Records, path);
+            SecurityMessage = $"PDF exported: {path}";
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            SecurityMessage = ex.Message;
+            MessageBox.Show(ex.Message, "RBAC", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
+    }
+
+    private async Task ExportCurrentRecordAsync()
+    {
+        if (SelectedRecord is null)
+        {
+            SecurityMessage = Loc.Get("NoRecordSelectedForExport");
+            return;
+        }
+
+        try
+        {
+            var safePlate = SelectedRecord.LicensePlate?.Replace(" ", "_") ?? "unknown";
+            var path = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                $"uvss-single-{safePlate}-{DateTime.Now:yyyyMMdd-HHmmss}.pdf");
+            await _exportService.ExportCurrentRecordPdfAsync(_session, SelectedRecord, path, SensitivityLevel);
+            SecurityMessage = $"Single-record PDF exported: {path}";
         }
         catch (UnauthorizedAccessException ex)
         {

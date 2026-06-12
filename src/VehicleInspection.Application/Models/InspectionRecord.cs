@@ -5,9 +5,9 @@ public sealed class InspectionRecord
     public Guid Id { get; init; } = Guid.NewGuid();
     public string TriggerId { get; init; } = string.Empty;
     public DateTimeOffset ScanTime { get; init; }
-    public string LicensePlate { get; init; } = string.Empty;
-    public string LicensePlateHash { get; init; } = string.Empty;
-    public InspectionStatus Status { get; init; }
+    public string LicensePlate { get; set; } = string.Empty;
+    public string LicensePlateHash { get; set; } = string.Empty;
+    public InspectionStatus Status { get; set; }
     public string UnderVehicleImagePath { get; init; } = string.Empty;
     public string FullVehicleImagePath { get; init; } = string.Empty;
     public string LicensePlateImagePath { get; init; } = string.Empty;

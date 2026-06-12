@@ -61,4 +61,35 @@ public sealed class BackendInspectionClient
         var path = query.Count == 0 ? "api/inspections" : $"api/inspections?{string.Join('&', query)}";
         return await _httpClient.GetFromJsonAsync<IReadOnlyList<InspectionRecord>>(path, cancellationToken) ?? Array.Empty<InspectionRecord>();
     }
+
+    public async Task<InspectionRecord?> GetPreviousByLicensePlateAsync(string licensePlate, string excludeTriggerId, CancellationToken cancellationToken = default)
+    {
+        var path = $"api/inspections/previous?licensePlate={Uri.EscapeDataString(licensePlate)}&excludeTriggerId={Uri.EscapeDataString(excludeTriggerId)}";
+        var response = await _httpClient.GetAsync(path, cancellationToken);
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            return null;
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<InspectionRecord>(cancellationToken: cancellationToken);
+    }
+
+    public async Task UpdateLicensePlateAsync(Guid inspectionId, string licensePlate, string licensePlateHash, CancellationToken cancellationToken = default)
+    {
+        var payload = new { licensePlate, licensePlateHash };
+        var response = await _httpClient.PutAsJsonAsync($"api/inspections/{inspectionId}/license-plate", payload, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task UpdateInspectionStatusAsync(Guid inspectionId, InspectionStatus status, CancellationToken cancellationToken = default)
+    {
+        var payload = new { status };
+        var response = await _httpClient.PutAsJsonAsync($"api/inspections/{inspectionId}/status", payload, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
+
+    public async Task UpdateNotesAsync(Guid inspectionId, string notes, CancellationToken cancellationToken = default)
+    {
+        var payload = new { notes };
+        var response = await _httpClient.PutAsJsonAsync($"api/inspections/{inspectionId}/notes", payload, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 }

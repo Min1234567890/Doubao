@@ -89,6 +89,62 @@ public sealed class InMemoryInspectionRepository : IInspectionRepository
         return Task.CompletedTask;
     }
 
+    public Task<InspectionRecord?> GetPreviousByLicensePlateAsync(string licensePlate, string excludeTriggerId, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(licensePlate))
+            return Task.FromResult<InspectionRecord?>(null);
+
+        lock (_inspections)
+        {
+            var previous = _inspections
+                .Where(r => r.LicensePlate.Equals(licensePlate, StringComparison.OrdinalIgnoreCase)
+                            && !r.TriggerId.Equals(excludeTriggerId, StringComparison.OrdinalIgnoreCase)
+                            && !string.IsNullOrWhiteSpace(r.UnderVehicleImagePath))
+                .OrderByDescending(r => r.ScanTime)
+                .FirstOrDefault();
+            return Task.FromResult<InspectionRecord?>(previous);
+        }
+    }
+
+    public Task UpdateLicensePlateAsync(Guid inspectionId, string licensePlate, string licensePlateHash, CancellationToken cancellationToken = default)
+    {
+        lock (_inspections)
+        {
+            var index = _inspections.FindIndex(record => record.Id == inspectionId);
+            if (index >= 0)
+            {
+                _inspections[index].LicensePlate = licensePlate;
+                _inspections[index].LicensePlateHash = licensePlateHash;
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateInspectionStatusAsync(Guid inspectionId, InspectionStatus status, CancellationToken cancellationToken = default)
+    {
+        lock (_inspections)
+        {
+            var index = _inspections.FindIndex(record => record.Id == inspectionId);
+            if (index >= 0)
+            {
+                _inspections[index].Status = status;
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateNotesAsync(Guid inspectionId, string notes, CancellationToken cancellationToken = default)
+    {
+        lock (_inspections)
+        {
+            var index = _inspections.FindIndex(record => record.Id == inspectionId);
+            if (index >= 0) _inspections[index].Notes = notes;
+        }
+        return Task.CompletedTask;
+    }
+
     public Task<IReadOnlyList<AuditEntry>> GetAuditEntriesAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult<IReadOnlyList<AuditEntry>>(_auditEntries.OrderByDescending(entry => entry.EventTimeUtc).ToList());

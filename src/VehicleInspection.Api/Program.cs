@@ -3,10 +3,14 @@ using VehicleInspection.Application.Repositories;
 using VehicleInspection.Application.Services;
 using VehicleInspection.Data.Repositories;
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseUrls(builder.Configuration["UVSS_BACKEND_URL"] ?? "http://localhost:5077");
 
-builder.Services.AddSingleton<IInspectionRepository, InMemoryInspectionRepository>();
+var connectionString = builder.Configuration["UVSS_CONNECTION_STRING"]
+    ?? "Server=.\\SQLEXPRESS;Database=VehicleInspection;Trusted_Connection=true;TrustServerCertificate=true;";
+builder.Services.AddSingleton<IInspectionRepository>(_ => new SqlInspectionRepository(connectionString));
 builder.Services.AddSingleton<AuditService>();
 builder.Services.AddSingleton(provider =>
 {
@@ -43,6 +47,30 @@ app.MapGet("/api/inspections", async (DateTime? fromDate, DateTime? toDate, stri
     return Results.Ok(await repository.SearchAsync(filter, cancellationToken));
 });
 
+app.MapGet("/api/inspections/previous", async (string licensePlate, string excludeTriggerId, IInspectionRepository repository, CancellationToken cancellationToken) =>
+{
+    var record = await repository.GetPreviousByLicensePlateAsync(licensePlate, excludeTriggerId, cancellationToken);
+    return record is null ? Results.NotFound() : Results.Ok(record);
+});
+
+app.MapPut("/api/inspections/{id}/license-plate", async (Guid id, UpdateLicensePlateRequest request, IInspectionRepository repository, CancellationToken cancellationToken) =>
+{
+    await repository.UpdateLicensePlateAsync(id, request.LicensePlate, request.LicensePlateHash, cancellationToken);
+    return Results.NoContent();
+});
+
+app.MapPut("/api/inspections/{id}/status", async (Guid id, UpdateStatusRequest request, IInspectionRepository repository, CancellationToken cancellationToken) =>
+{
+    await repository.UpdateInspectionStatusAsync(id, request.Status, cancellationToken);
+    return Results.NoContent();
+});
+
+app.MapPut("/api/inspections/{id}/notes", async (Guid id, UpdateNotesRequest request, IInspectionRepository repository, CancellationToken cancellationToken) =>
+{
+    await repository.UpdateNotesAsync(id, request.Notes, cancellationToken);
+    return Results.NoContent();
+});
+
 app.MapGet("/api/images/{triggerId}/{fileName}", (string triggerId, string fileName) =>
 {
     var imageRoot = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UVSS", "VehicleInspection", "BackendImages");
@@ -57,4 +85,20 @@ app.Run();
 static string SafeSegment(string value)
 {
     return string.Concat(value.Select(ch => char.IsLetterOrDigit(ch) || ch is '-' or '_' ? ch : '_'));
+}
+
+internal sealed record UpdateLicensePlateRequest
+{
+    public string LicensePlate { get; init; } = string.Empty;
+    public string LicensePlateHash { get; init; } = string.Empty;
+}
+
+internal sealed record UpdateStatusRequest
+{
+    public InspectionStatus Status { get; init; }
+}
+
+internal sealed record UpdateNotesRequest
+{
+    public string Notes { get; init; } = string.Empty;
 }

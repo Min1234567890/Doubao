@@ -1,0 +1,95 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="AppTitle">UVSS نظام فحص المركبات</sys:String>
+    <sys:String x:Key="Dashboard">لوحة التحكم</sys:String>
+    <sys:String x:Key="Reports">بحث</sys:String>
+    <sys:String x:Key="Language">English</sys:String>
+    <sys:String x:Key="User">المستخدم</sys:String>
+    <sys:String x:Key="Role">الدور</sys:String>
+
+    <!-- Brand -->
+    <sys:String x:Key="BrandName">TeleRadio</sys:String>
+    <sys:String x:Key="BrandSubtitle">فحص المركبات</sys:String>
+
+    <!-- Top bar -->
+    <sys:String x:Key="Socket">الاتصالات</sys:String>
+
+    <!-- Dashboard labels -->
+    <sys:String x:Key="UvssCurrentScan">UVSS: المسح الحالي</sys:String>
+    <sys:String x:Key="UvssPreviousScan">UVSS: المسح السابق</sys:String>
+    <sys:String x:Key="UvssPlaceholder">صورة مسح أسفل المركبة — تكبير/تحريك</sys:String>
+    <sys:String x:Key="NoPreviousScanPlaceholder">لا يوجد مسح سابق لهذه اللوحة</sys:String>
+    <sys:String x:Key="Roi">ROI</sys:String>
+    <sys:String x:Key="Live">مباشر</sys:String>
+    <sys:String x:Key="VlprPlateImage">صورة لوحة المركبة</sys:String>
+    <sys:String x:Key="VlprPlaceholder">التقاط لوحة المركبة</sys:String>
+    <sys:String x:Key="XrayImage">صورة الأشعة</sys:String>
+    <sys:String x:Key="XrayPlaceholder">صورة الأشعة السينية</sys:String>
+    <sys:String x:Key="OperatorNotesLabel">ملاحظات المشغل</sys:String>
+    <sys:String x:Key="NotesLabel">ملاحظات</sys:String>
+    <sys:String x:Key="FodLabel">أجسام غريبة</sys:String>
+
+    <!-- Search labels -->
+    <sys:String x:Key="FilterReports">سجل البحث</sys:String>
+    <sys:String x:Key="DateFrom">من</sys:String>
+    <sys:String x:Key="DateTo">إلى</sys:String>
+    <sys:String x:Key="LicensePlate">لوحة المركبة</sys:String>
+    <sys:String x:Key="Status">الحالة</sys:String>
+    <sys:String x:Key="FodOnly">الأجسام الغريبة فقط</sys:String>
+    <sys:String x:Key="ApplyFilters">تطبيق</sys:String>
+    <sys:String x:Key="ExportCsv">CSV تصدير</sys:String>
+    <sys:String x:Key="ExportPdf">PDF تصدير</sys:String>
+    <sys:String x:Key="ExportCurrentRecord">تصدير السجل الحالي</sys:String>
+    <sys:String x:Key="Exit">خروج</sys:String>
+    <sys:String x:Key="ExitConfirm">هل أنت متأكد من الخروج من التطبيق؟</sys:String>
+    <sys:String x:Key="SelectedRecord">السجل المحدد</sys:String>
+    <sys:String x:Key="UvssUnderVehicle">UVSS أسفل المركبة</sys:String>
+    <sys:String x:Key="SelectedRecordUvssPlaceholder">UVSS صورة السجل المحدد</sys:String>
+    <sys:String x:Key="SelectedRecordXrayPlaceholder">صورة الأشعة للسجل المحدد</sys:String>
+    <sys:String x:Key="SelectedRecordVlprPlaceholder">صورة لوحة السجل المحدد</sys:String>
+
+    <!-- Table headers -->
+    <sys:String x:Key="ScanTime">وقت المسح</sys:String>
+    <sys:String x:Key="Plate">اللوحة</sys:String>
+    <sys:String x:Key="Lane">المسار</sys:String>
+    <sys:String x:Key="Operator">المشغل</sys:String>
+    <sys:String x:Key="FodHeader">أجسام غريبة</sys:String>
+    <sys:String x:Key="SystemHeader">النظام</sys:String>
+    <sys:String x:Key="Trigger">المعرف</sys:String>
+
+    <!-- Status enum -->
+    <sys:String x:Key="StatusPending">قيد الانتظار</sys:String>
+    <sys:String x:Key="StatusClear">مسموح</sys:String>
+    <sys:String x:Key="StatusReview">مراجعة</sys:String>
+    <sys:String x:Key="StatusHold">محتجز</sys:String>
+    <sys:String x:Key="StatusEscalated">مصعد</sys:String>
+
+    <!-- Dashboard messages -->
+    <sys:String x:Key="NoFod">لا توجد أجسام غريبة</sys:String>
+    <sys:String x:Key="FodAlerts">{0} ({1} تنبيهات)</sys:String>
+    <sys:String x:Key="AllSubsystemsOperational">جميع الأنظمة تعمل</sys:String>
+    <sys:String x:Key="CriticalTotalAlerts">{0} حرج / {1} إجمالي التنبيهات</sys:String>
+    <sys:String x:Key="XrayAvailable">الأشعة متاحة</sys:String>
+    <sys:String x:Key="FodActive">كشف الأجسام الغريبة</sys:String>
+    <sys:String x:Key="FodSeverityClear">نظيف</sys:String>
+    <sys:String x:Key="FodSeverityCritical">حرج</sys:String>
+    <sys:String x:Key="FodSeverityHigh">عالي</sys:String>
+    <sys:String x:Key="FodSeverityMedium">متوسط</sys:String>
+    <sys:String x:Key="FodSeverityLow">منخفض</sys:String>
+    <sys:String x:Key="SensitivityL1">L1 — حرج فقط</sys:String>
+    <sys:String x:Key="SensitivityL2">L2 — عالي+</sys:String>
+    <sys:String x:Key="SensitivityL3">L3 — متوسط+</sys:String>
+    <sys:String x:Key="SensitivityL4">L4 — منخفض+</sys:String>
+    <sys:String x:Key="SensitivityL5">L5 — الكل</sys:String>
+    <sys:String x:Key="SocketStopped">تم إيقاف الاتصال</sys:String>
+    <sys:String x:Key="StatusAll">الكل</sys:String>
+    <sys:String x:Key="Reset">إعادة</sys:String>
+
+    <!-- Search status messages -->
+    <sys:String x:Key="RecordsLoaded">{0} سجل محمل. الصلاحية: {1}</sys:String>
+    <sys:String x:Key="LicensePlateUpdatedMsg">تم تحديث اللوحة: {0} ← {1}</sys:String>
+    <sys:String x:Key="UpdateFailed">فشل التحديث: {0}</sys:String>
+    <sys:String x:Key="StatusUpdatedMsg">تم تحديث الحالة: {0} ← {1}</sys:String>
+    <sys:String x:Key="NoRecordSelectedForExport">لم يتم اختيار أي سجل للتصدير.</sys:String>
+</ResourceDictionary>
