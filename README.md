@@ -1,8 +1,8 @@
 # UVSS Vehicle Inspection Suite
 
-Windows-native enterprise dashboard for vehicle security screening operations. The solution is built in C# with WPF and follows a 3-tier architecture for presentation, application logic, and data persistence.
+Windows-native enterprise dashboard for vehicle security screening operations. Built in C# with WPF (.NET 10) and ASP.NET Core Minimal API, following a 3-tier architecture for presentation, application logic, and data persistence.
 
-The system is designed for 24/7 security operation centers where the undervehicle image is the primary inspection artifact. It supports undervehicle scan review, full vehicle imagery, license plate OCR context, optional X-ray imagery, FOD alert review, bilingual English/Chinese UI, report filtering, export workflows, RBAC, audit logging, and MSSQL hardening guidance.
+The system is designed for 24/7 security operation centers where the under-vehicle image is the primary inspection artifact. It supports under-vehicle scan review, license plate OCR context, X-ray imagery, ROI (Region of Interest) overlay with 5-level sensitivity, FOD alert review, 4-language UI (English, Arabic, Malay, Thai), report filtering, CSV/PDF export workflows, single-record landscape PDF export with composited ROI rectangles, RBAC, audit logging, Windows-integrated authentication, and MSSQL persistence.
 
 ## Solution Overview
 
@@ -10,10 +10,12 @@ The system is designed for 24/7 security operation centers where the undervehicl
 VehicleInspectionSuite.sln
 ├── src/
 │   ├── VehicleInspection.App/          # WPF Windows desktop presentation tier
-│   ├── VehicleInspection.Application/  # Business logic, RBAC, audit, export services
-│   └── VehicleInspection.Data/         # Repository implementations and data access boundary
+│   ├── VehicleInspection.Api/          # ASP.NET Core Minimal API backend
+│   ├── VehicleInspection.Application/  # Business logic, models, RBAC, audit, export services
+│   └── VehicleInspection.Data/         # Repository implementations (InMemory + MSSQL)
 ├── database/                           # MSSQL schema, hardening, seed scripts
 ├── docs/                               # CIS validation and Windows deployment guides
+├── UVSS_SOFTWARE_REQUIREMENTS.md       # Complete architecture and GUI requirements spec
 ├── index.html                          # Earlier UVSS web prototype, not used by WPF app
 ├── styles.css                          # Earlier UVSS web prototype, not used by WPF app
 └── script.js                           # Earlier UVSS web prototype, not used by WPF app
@@ -21,35 +23,51 @@ VehicleInspectionSuite.sln
 
 ## Architecture
 
-The application follows a 3-tier enterprise architecture.
+The application follows a 3-tier enterprise architecture with a REST API bridge.
+
+```
+Devices (UVSS/X-ray/VLPR)
+    |  TCP JSON (newline-delimited, base64 images)
+    v
+WPF App (VehicleInspection.App)
+    |-- TcpDeviceSocketListener (127.0.0.1:47011)
+    |-- FrontendDeviceIngestionForwarder (validate + deduplicate)
+    |-- BackendInspectionClient (HTTP to API)
+    |
+    v
+ASP.NET API (VehicleInspection.Api)
+    |-- Minimal API endpoints (8 routes)
+    |-- DeviceIngestionService (backend validation, image persistence)
+    |-- IInspectionRepository → SqlInspectionRepository (MSSQL)
+```
 
 ### 1. Presentation Tier: `VehicleInspection.App`
 
-WPF desktop application targeting `net7.0-windows`.
+WPF desktop application targeting `net10.0-windows`.
 
-Responsibilities:
-- Render the dark UVSS-branded security dashboard.
-- Keep the undervehicle image panel as the dominant visual focus.
-- Provide zoom and pan for all image panels.
-- Show secondary panels for full vehicle image, license plate OCR, and X-ray/FOD logic.
-- Provide the inspection report page with filters and exports.
-- Support one-click English/Chinese language switching.
-- Enforce UI-level RBAC affordances such as disabling unauthorized export flows.
-
-Key modules:
+**Key modules:**
 
 ```text
 src/VehicleInspection.App/
-├── App.xaml
-├── MainWindow.xaml
-├── MainWindow.xaml.cs
+├── App.xaml / App.xaml.cs
+├── MainWindow.xaml / MainWindow.xaml.cs
 ├── Controls/
 │   ├── ZoomPanImageControl.xaml
 │   └── ZoomPanImageControl.xaml.cs
+├── Localization/
+│   ├── Loc.cs
+│   └── StatusDisplayConverter.cs
 ├── Resources/
 │   ├── Theme.xaml
 │   ├── Strings.en-US.xaml
-│   └── Strings.zh-CN.xaml
+│   ├── Strings.ar-SA.xaml
+│   ├── Strings.ms-MY.xaml
+│   └── Strings.th-TH.xaml
+├── Services/
+│   ├── BackendInspectionClient.cs
+│   ├── FrontendDeviceIngestionForwarder.cs
+│   ├── HttpInspectionRepository.cs
+│   └── TcpDeviceSocketListener.cs
 ├── ViewModels/
 │   ├── DashboardViewModel.cs
 │   ├── MainViewModel.cs
@@ -57,353 +75,144 @@ src/VehicleInspection.App/
 │   ├── ReportViewModel.cs
 │   └── ViewModelBase.cs
 └── Views/
-    ├── DashboardView.xaml
-    ├── DashboardView.xaml.cs
-    ├── ReportView.xaml
-    └── ReportView.xaml.cs
+    ├── DashboardView.xaml / .xaml.cs
+    └── ReportView.xaml / .xaml.cs
 ```
 
-#### `MainWindow`
+#### MainWindow
 
 The main shell contains:
-- Top bar with UVSS branding.
-- Scan time.
-- inspection status.
-- language switch.
-- user and role display.
-- lock button.
-- navigation between Dashboard and Reports.
-
-`MainWindow.xaml.cs` wires:
-- initial view model loading.
-- active view switching.
-- runtime resource dictionary replacement for English/Chinese text.
-
-#### `DashboardView`
-
-The operations dashboard is arranged around the inspection workflow:
-
-- Large primary undervehicle image panel.
-- Full vehicle image panel.
-- License plate OCR panel.
-- Conditional X-ray/FOD panel.
-- Inspection summary.
-- System health.
-- Operator notes.
-
-The UV image panel intentionally receives the largest layout region, stronger border, and primary display label because UV imagery is the main security review surface.
-
-#### `ReportView`
-
-Dedicated report page for inspection history.
-
-Features:
-- Date range filter.
-- License plate filter.
-- Inspection status filter.
-- FOD-alert-only filter.
-- Data grid with historical inspections.
-- CSV export.
-- PDF manifest export placeholder.
-- RBAC-gated export commands.
-- Export audit logging through the application tier.
-
-#### `ZoomPanImageControl`
-
-Reusable WPF control for inspection image panels.
-
-Features:
-- Mouse wheel zoom.
-- Mouse drag pan.
-- Reset button.
-- Lightweight vector inspection placeholder.
-- Bitmap caching and frame-throttled zoom updates to keep the UI responsive.
-
-Current implementation uses placeholder vectors so the solution builds without external image assets. Production integration should bind actual image sources from secure storage.
-
-#### `Resources/Theme.xaml`
-
-Central UVSS design system for WPF.
-
-Palette:
-- Deep navy: `#101820`
-- Navy/charcoal: `#1A242F`
-- Panel dark: `#162230`
-- Corporate blue: `#1F6FBF`
-- Bright technical blue: `#4EA3E6`
-- Muted text gray: `#9EACBA`
-
-The theme is optimized for security operations rooms and 24/7 monitoring.
-
-#### `Strings.en-US.xaml` and `Strings.zh-CN.xaml`
-
-Bilingual resource dictionaries used by `DynamicResource` bindings. The language toggle swaps these dictionaries at runtime.
-
-### 2. Application Tier: `VehicleInspection.Application`
-
-Class library targeting `net7.0`.
-
-Responsibilities:
-- Domain models.
-- Inspection search and current inspection logic.
-- RBAC permission checks.
-- Audit logging orchestration.
-- Export workflows.
-- Session idle-lock logic.
-- Repository interfaces.
-
-Key modules:
-
-```text
-src/VehicleInspection.Application/
-├── Models/
-│   ├── AuditEntry.cs
-│   ├── InspectionRecord.cs
-│   ├── ReportFilter.cs
-│   └── UserSession.cs
-├── Repositories/
-│   └── IInspectionRepository.cs
-├── Security/
-│   ├── AccessControlService.cs
-│   ├── Permission.cs
-│   └── Role.cs
-└── Services/
-    ├── AuditService.cs
-    ├── ExportService.cs
-    ├── InspectionService.cs
-    └── SessionLockService.cs
-```
+- Top bar with UVSS branding, nav buttons (Dashboard/Search), socket status, user, role, language toggle, and Exit button with confirmation dialog.
+- Content area that swaps between Dashboard and Reports views.
+- Runtime resource dictionary replacement for 4-language switching.
 
-#### Models
+#### DashboardView
 
-`InspectionRecord` represents one vehicle screening event:
-- scan time.
-- license plate.
-- inspection status.
-- UV image path.
-- full vehicle image path.
-- license plate image path.
-- optional X-ray image path.
-- FOD alerts.
-- operator name.
-- lane.
-- notes.
-- system health.
+The operations dashboard arranged around the inspection workflow:
+- **Left column**: Current UVSS scan (with ROI overlay + sensitivity slider), Previous UVSS scan (synced zoom/pan).
+- **Right column**: VLPR plate image (with editable license plate overlay), X-ray image, operator notes textbox, FOD severity badge, status ComboBox, system error summary, lane and scan time.
+- No-image display: black background with placeholder text (no diagram pattern).
 
-`FodAlert` records zone, severity, description, and confidence.
+#### ReportView
 
-`ReportFilter` contains report query criteria.
+Dedicated search/report page for inspection history:
+- **Filter bar**: Date From/To pickers, License Plate textbox, Status ComboBox, FOD-only checkbox, Apply Filters button.
+- **Export buttons**: Export CSV, Export PDF (all records), Export Current Record (single record with ROI).
+- **DataGrid**: ScanTime, Plate (editable inline), Status, Lane, Operator, FOD count, System.
+- **Detail panel**: Selected record images (UVSS with ROI slider, X-ray, VLPR), notes textbox.
+- RBAC-gated export commands with audit logging.
+- Inline editing: plate (Enter key), notes (Enter/LostFocus), status (ComboBox selection).
+- No-image display: black background with placeholder text, ROI controls hidden.
 
-`UserSession` tracks current user, role, login time, last activity, and lock state.
+#### ZoomPanImageControl
 
-`AuditEntry` represents auditable user activity.
+Reusable WPF control for all inspection image panels:
+- Mouse wheel zoom (0.5x–5x), left-drag pan, synchronized across linked controls.
+- Right-drag contrast/brightness adjustment per-pixel via `Parallel.For` on BGRA32.
+- ROI overlay: loads `D:\image\transaction\roi1.json`, draws colored rectangles scaled from 8192×4096 source to panel, filtered by 5-level sensitivity.
+- License plate overlay: editable TextBox (Enter commits, Escape reverts).
+- No-image display: black background with placeholder text, all diagram shapes hidden.
 
-#### RBAC
+#### Localization
 
-`Role` supports:
-- `Admin`
-- `Operator`
-- `Viewer`
+4-language support with hot-swappable resource dictionaries:
+- English (en-US) — default
+- Arabic (ar-SA)
+- Malay (ms-MY)
+- Thai (th-TH)
 
-`Permission` supports:
-- dashboard viewing.
-- report viewing.
-- report export.
-- note editing.
-- configuration management.
-- audit log viewing.
+Uses `{DynamicResource}` in XAML and `Loc.Get()` / `Loc.Format()` in C#. ~95 string keys covering all UI text.
 
-`AccessControlService` maps roles to permissions.
+#### Theme.xaml
 
-Current permissions:
-- Viewer: dashboard and report viewing only.
-- Operator: dashboard, reports, exports, and notes.
-- Admin: all permissions.
+Dark theme design system optimized for security operations rooms. Colors: deep navy (#101820), navy/charcoal (#1A242F), corporate blue (#1F6FBF), bright blue (#4EA3E6). Custom styles for Button (hover/pressed/disabled), TextBox, ComboBox, DataGrid, DatePicker, Calendar.
 
-#### `InspectionService`
+### 2. API Tier: `VehicleInspection.Api`
 
-Application service for inspection workflows.
+ASP.NET Core Minimal API targeting `net10.0`.
 
-Responsibilities:
-- Load the current inspection.
-- Search inspection history by filter.
-- Audit dashboard views and report searches.
+**Endpoints:**
 
-#### `AuditService`
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/device-ingestion` | Accept device payload, return record or 202 |
+| GET | `/api/inspections/current` | Most recent inspection |
+| GET | `/api/inspections` | Search with optional date/plate/status/FOD filters |
+| GET | `/api/inspections/previous` | Previous scan by license plate |
+| PUT | `/api/inspections/{id}/license-plate` | Update plate + hash |
+| PUT | `/api/inspections/{id}/status` | Update status |
+| PUT | `/api/inspections/{id}/notes` | Update notes |
+| GET | `/api/images/{triggerId}/{fileName}` | Serve stored image |
 
-Central audit logging service.
+Image storage: `%LOCALAPPDATA%/UVSS/VehicleInspection/BackendImages/{triggerId}/`.
 
-Records:
-- dashboard views.
-- report searches.
-- export attempts.
-- export denials.
-- export successes.
+### 3. Application Tier: `VehicleInspection.Application`
 
-The current implementation writes through the repository interface. Production deployments should persist audit entries to MSSQL and forward them to SIEM.
+Class library targeting `net10.0`.
 
-#### `ExportService`
+**Models**: InspectionRecord, FodAlert, DeviceIngestionMessage, ReportFilter, AuditEntry, UserSession, SystemErrorMessage, IngestionRecordState.
 
-Handles report exports with RBAC and audit logging.
+**Services**:
+- `InspectionService` — orchestrates inspection operations with audit logging.
+- `AuditService` — creates and persists audit entries.
+- `ExportService` — CSV export, PDF bulk export (tabular), PDF single-record export (landscape A4 with composited ROI rectangles using QuestPDF + System.Drawing).
+- `DeviceIngestionService` — validates, deduplicates, persists incoming device images.
+- `SessionLockService` — 15-minute idle lock.
 
-Supported outputs:
-- CSV export.
-- PDF-ready manifest export.
+**Security**:
+- Roles: Viewer, Operator, Admin.
+- Permissions: ViewDashboard, ViewReports, ExportReports, EditOperatorNotes, ManageConfiguration, ViewAuditLog.
+- `AccessControlService` — maps roles to permissions.
+- `AuditedAuthorizationService` — wraps authorization with audit logging.
+- `WindowsAuthenticationService` — authenticates current Windows user via Active Directory (with local group fallback).
 
-The PDF path is intentionally implemented as a manifest placeholder because production PDF generation should use an enterprise-approved, signed PDF library. The audit and authorization workflow is already in place.
+### 4. Data Tier: `VehicleInspection.Data`
 
-#### `SessionLockService`
+Class library targeting `net10.0`.
 
-Defines idle session-lock behavior. The default threshold is 15 minutes.
+**Repositories**:
+- `InMemoryInspectionRepository` — thread-safe in-memory implementation for development with seed data (3 sample inspections).
+- `SqlInspectionRepository` — full MSSQL implementation with auto-created schema, parameterized queries, JSON serialization for FOD/system errors, and seed data.
 
-Production hardening should connect this service to global input tracking and require re-authentication through the enterprise identity provider.
+## Export Features
 
-### 3. Data Tier: `VehicleInspection.Data`
+### CSV Export
+Exports all filtered records with columns: ScanTime, LicensePlate, Status, Lane, Operator, FodAlerts, SystemHealth.
 
-Class library targeting `net7.0`.
+### PDF Export (All Records)
+A4 portrait tabular report of all filtered records.
 
-Responsibilities:
-- Repository implementations.
-- Data access boundary.
-- Development sample data.
-
-Key modules:
-
-```text
-src/VehicleInspection.Data/
-└── Repositories/
-    ├── DataRepositoryAssemblyMarker.cs
-    └── InMemoryInspectionRepository.cs
-```
-
-#### `InMemoryInspectionRepository`
-
-Development repository used to run the WPF app without requiring SQL Server during local UI work.
-
-It provides:
-- current inspection data.
-- historical report data.
-- sample X-ray and FOD conditions.
-- in-memory audit log storage.
-
-Production should replace or extend this with an MSSQL-backed repository using parameterized queries or EF Core parameterization.
-
-## Database Module
-
-SQL scripts are located in `database/`.
-
-```text
-database/
-├── 001_create_schema.sql
-├── 002_security_hardening.sql
-└── 003_seed_sample_data.sql
-```
-
-### `001_create_schema.sql`
-
-Creates the main MSSQL schema:
-- `Roles`
-- `Users`
-- `UserRoles`
-- `Inspections`
-- `InspectionImages`
-- `FodAlerts`
-- `OperatorNotes`
-- `AuditLog`
-- `ExportLog`
-- `SystemStatus`
-
-Indexes support:
-- scan time filtering.
-- license plate hash lookup.
-- inspection status lookup.
-- FOD severity lookup.
-- audit event review.
-
-### `002_security_hardening.sql`
-
-Adds CIS-aligned MSSQL controls:
-- least-privilege database roles.
-- grants for read/write/audit/admin roles.
-- denial of direct user-role table reads to app read role.
-- AES-256 symmetric key design for license plate encryption.
-- SQL Server Audit and Database Audit Specification.
-- DBA checklist for `sa`, guest, TLS, network isolation, backups, and service accounts.
-
-The placeholder master-key password must be replaced with a secret generated and stored by the enterprise secret-management system.
-
-### `003_seed_sample_data.sql`
-
-Development/staging sample data only.
-
-Creates:
-- roles.
-- one operator.
-- one sample inspection.
-- sample image records.
-- sample FOD alert.
-- sample operator note.
-
-Do not run this script in production unless adapted for an approved test tenant.
-
-## Documentation Module
-
-```text
-docs/
-├── CIS-Compliance-Validation.md
-└── Deployment-Guide-Windows.md
-```
-
-### `CIS-Compliance-Validation.md`
-
-Explains which CIS-aligned controls are implemented in code and which must be validated in the production environment.
-
-Covered areas:
-- Windows app controls.
-- .NET application-tier controls.
-- MSSQL controls.
-- required environment validation.
-
-Important: the solution is CIS-aligned, but a formal CIS Level 2 claim requires validation on the deployed Windows hosts, SQL Server, network, identity, certificates, backups, code signing, and monitoring stack.
-
-### `Deployment-Guide-Windows.md`
-
-Enterprise deployment checklist covering:
-- prerequisites.
-- build command.
-- database setup.
-- application deployment.
-- operational validation.
-- audit and backup operations.
+### Single Record PDF Export
+Landscape A4 single-page report for the selected record:
+- **Header**: Title, timestamp, Plate/Lane/Operator/Status metadata.
+- **Top (65%)**: UVSS image with ROI rectangles composited (color-coded by sensitivity level L1–L5).
+- **Bottom (35%)**: VLPR image (40%), X-ray image (40%), Scan Info + Notes (20%).
+- ROI sourced from `D:\image\transaction\roi1.json`, mapped from 8192×4096 space.
+- Sensitivity level configurable via UI slider (1–5).
 
 ## Security Design
 
-The baseline includes the following security controls:
-
-- Role-based access control.
-- Viewer export denial.
-- Audited report searches.
-- Audited exports.
-- Audited export denials.
-- No plaintext credentials in source.
-- Separate application and data tiers.
+- Role-based access control (Viewer/Operator/Admin).
+- Audited authorization checks (every permission check recorded).
+- Export RBAC gating (Viewers cannot export).
+- Windows-integrated authentication with Active Directory support.
+- Frontend + backend dual device validation and deduplication.
+- First-image-wins rule per trigger per category.
+- API key validation for device ingestion.
+- License plate SHA256 hashing.
+- License plate encryption design (MSSQL AES-256).
 - SQL least-privilege role scripts.
-- SQL audit specification.
-- License plate encryption design.
-- License plate hash search design.
-- Idle session-lock foundation.
-- User-safe authorization errors.
+- Idle session-lock (15 minutes).
 
-Production hardening still needs:
-- real identity provider integration.
-- signed binaries.
-- enterprise secret storage.
-- SQL TLS certificates.
-- Windows endpoint CIS hardening.
-- database backup encryption and restore testing.
-- SIEM forwarding.
-- DLP/clipboard policy.
-- independent CIS validation.
+## Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `UVSS_BACKEND_URL` | `http://localhost:5077` | API base URL |
+| `UVSS_CONNECTION_STRING` | `Server=.\\SQLEXPRESS;Database=VehicleInspection;Trusted_Connection=true;...` | SQL connection |
+| `UVSS_DEVICE_API_KEY` | `development-key-change-me` | Device auth key |
+| `UVSS_AD_DOMAIN` | (optional) | Active Directory domain |
+| `UVSS_AD_SERVER` | (optional) | Active Directory server |
 
 ## Build
 
@@ -411,13 +220,7 @@ Production hardening still needs:
 dotnet build VehicleInspectionSuite.sln
 ```
 
-Expected result:
-
-```text
-Build succeeded.
-0 Warning(s)
-0 Error(s)
-```
+Expected: `Build succeeded. 0 Warning(s) 0 Error(s)`
 
 ## Run
 
@@ -433,23 +236,9 @@ Then start the WPF frontend:
 dotnet run --project src\VehicleInspection.App\VehicleInspection.App.csproj
 ```
 
-The WPF app launches the Windows desktop dashboard and starts the frontend device socket listener. External devices connect only to the WPF frontend; the WPF frontend forwards accepted data to the backend API.
+The WPF app launches the desktop dashboard and starts the frontend device socket listener on `127.0.0.1:47011`.
 
-## Frontend Device Intake and Backend Persistence
-
-The WPF app listens for newline-delimited JSON device messages on `127.0.0.1:47011` by default. The listener validates and deduplicates UVSS, X-ray, and VLPR device payloads by trigger, then forwards only accepted first-category payloads to the backend API at `http://localhost:5077`.
-
-Accepted categories:
-- `Uvss`: undervehicle image plus optional FOD JSON.
-- `Xray`: X-ray image.
-- `Vlpr`: license plate crop plus license plate number.
-
-First-image-wins rule:
-- One `triggerId` maps to one inspection record.
-- The first image for each category is accepted.
-- Later messages for the same `triggerId` and category are ignored and do not replace the original image, license plate, or FOD data.
-
-Default contract:
+## Device Ingestion Contract
 
 ```json
 {
@@ -475,32 +264,11 @@ Default contract:
 }
 ```
 
-Security defaults:
-- Devices bind to the frontend listener on localhost for safe local operation.
-- Devices do not communicate directly with the backend.
-- The frontend requires an API key before forwarding payloads.
-- The frontend validates trigger, category, device, lane, image format, and payload size.
-- The frontend ignores duplicate categories for the same trigger before forwarding.
-- The backend repeats validation defensively and generates server-side filenames under `%LOCALAPPDATA%\\UVSS\\VehicleInspection\\BackendImages`.
-- The backend returns image URLs for WPF dashboard/report preview panels.
-- Reject unsupported image formats and invalid API keys without crashing the app.
+Accepted categories: `Uvss`, `Xray`, `Vlpr`. First-image-wins: one triggerId → one inspection record. Later messages for the same triggerId + category are ignored.
 
-## Current Implementation Notes
+## Documentation
 
-- The backend API currently uses an in-memory repository for local development.
-- The WPF app reads dashboard/report data from the backend API.
-- Image panels display backend image URLs when device payloads provide valid image data, otherwise they show vector placeholders.
-- PDF export is represented by a PDF-ready manifest placeholder.
-- The SQL scripts define production schema and hardening direction but are not yet wired to a live MSSQL repository.
-- The previous `index.html`, `styles.css`, and `script.js` are an earlier web prototype and are not part of the WPF runtime.
-
-## Recommended Next Steps
-
-1. Replace `InMemoryInspectionRepository` with an MSSQL repository.
-2. Bind `ZoomPanImageControl` to real image sources from secure storage.
-3. Add Windows/domain authentication.
-4. Wire `SessionLockService` to global idle tracking and unlock workflow.
-5. Add a signed enterprise PDF export library.
-6. Add unit and integration tests.
-7. Add deployment packaging and code signing.
-8. Run CIS benchmark validation in the target Windows and SQL Server environment.
+- `UVSS_SOFTWARE_REQUIREMENTS.md` — complete architecture and GUI requirements specification (can be used to rebuild the application).
+- `docs/CIS-Compliance-Validation.md` — CIS-aligned controls documentation.
+- `docs/Deployment-Guide-Windows.md` — enterprise deployment checklist.
+- `database/` — MSSQL schema, hardening, and seed scripts.
